@@ -5,4 +5,6 @@
     max-width: 1200px;
     min-height: 700px;
     text-align: center;
+    border: 1px solid #d3e6f5;
+    box-shadow: 0 0 10px #d3e6f5;
 }

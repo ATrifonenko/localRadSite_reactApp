@@ -4,12 +4,16 @@ import '../css/header.css'
 function Header() {
     return (
         <header className="header">
-            <div className="logo"></div>
-            <h1>Внутренний сайт МВД г.Радужный</h1>
+            <div className="title-block">
+                <a href="/" className="link">
+                    <img src="https://xserver.a-real.ru/images/gerb-mvd.png" alt="МВД г.Радужный" className="logo"/>
+                </a>
+                <h1>Информационный сайт МВД г.Радужный</h1>
+            </div>
             <nav className="main-nav">
-                <a href="">Новости</a>
-                <a href="">Справочник</a>
-                <a href="">Сервисы ИСОД</a>
+                <a className="menu-item" href=""><span>Новости</span></a>
+                <a className="menu-item" href=""><span>Справочник</span></a>
+                <a className="menu-item" href=""><span>Сервисы ИСОД</span></a>
             </nav>
         </header>
     );
