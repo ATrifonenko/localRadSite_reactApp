@@ -8,7 +8,7 @@ function Header() {
                 <a href="/" className="link">
                     <img src="https://xserver.a-real.ru/images/gerb-mvd.png" alt="МВД г.Радужный" className="logo"/>
                 </a>
-                <h1>Информационный сайт МВД г.Радужный</h1>
+                <h1 className="title">Информационный сайт МВД г.Радужный</h1>
             </div>
             <nav className="main-nav">
                 <a className="menu-item" href=""><span>Новости</span></a>
