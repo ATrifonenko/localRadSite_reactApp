@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import '../css/addNewsForm.css';
 
-class AddNewsForm extends Component {
+class AddNewsForm extends React.Component {
     state = {
         title: '',
         text: '',
@@ -30,8 +30,13 @@ class AddNewsForm extends Component {
         }
 
         fetch('//radmvd/backend/addNews.php', query)
-            .then(response => response.json())
-            //.then(({ city }) => this.fetchWeatherData(city))
+            .then(() => {
+                this.setState({
+                    title: '',
+                    text: '',
+                    author: ''
+                })
+            })
             .catch(error => console.log(error));
     }
 

@@ -1,27 +1,46 @@
 import React from 'react';
 import '../css/newsList.css';
 
-function NewsList() {
-    return (
-        <div className="news-list">
-            <div className="news-item">
-                <h1 className="title-news">Заголовок новости</h1>            
-                <p className="text-news">Съешь еще этих мягких французских булочек.</p>
+class NewsList extends React.Component {
+    
+    state = {
+        news: []
+    }
+
+    componentDidMount() {
+        this.getNews()
+    }
+
+    getNews = () => {
+
+        fetch('//radmvd/backend/getNews.php')
+            .then(response => response.json())
+            .then(data => {
+                this.setState({
+                    news: data.news
+                })
+            })
+            .catch(error => console.log(error));
+    }
+
+    render() {
+        const item = this.state.news.map(newsItem => 
+            <div className="news-item" key={newsItem.id}>
+                <h1 className="title-news">{newsItem.title}</h1>            
+                <p className="text-news">{newsItem.text}</p>
                 <div className="info-news">
-                    <p className="date-news">03 августа 2017г.</p>
-                    <p className="autor-news">Админ</p>  
+                    <p className="date-news">{newsItem.datetime}</p>
+                    <p className="autor-news">{newsItem.author}</p>  
                 </div>  
             </div>
-            <div className="news-item">
-                <h1 className="title-news">Заголовок новости 2</h1>            
-                <p className="text-news">Съешь еще этих мягких французских булочек.</p>
-                <div className="info-news">
-                    <p className="date-news">03 августа 2017г.</p>
-                    <p className="autor-news">Админ</p>  
-                </div>  
+        );
+            
+        return (
+            <div className="news-list">
+                {item}
             </div>
-        </div>
-    );
-}
+        );
+    }
+}   
 
 export default NewsList;
