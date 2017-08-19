@@ -63,3 +63,18 @@ textarea {
   text-shadow: none;
   transition: all 50ms cubic-bezier(0.42, 0, 0.58, 1);
 }
+
+span.change-form {
+  display: block;
+  margin: 10px;
+  font-size: 14px;
+}
+
+span.change-form a{
+  color: #007cad;
+  text-decoration: none;
+}
+
+span.change-form a:hover {
+  text-decoration: underline;
+}

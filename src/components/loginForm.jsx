@@ -3,8 +3,10 @@ import '../css/addNewsForm.css';
 
 class LoginForm extends React.Component {
     state = {
-        username: '',
-        password: ''
+        login: '',
+        password: '',
+        password2: '',
+        loginForm: true
     }
 
     handleChange = event => {
@@ -15,29 +17,48 @@ class LoginForm extends React.Component {
         })
     }
 
+    handleChangeForm = event => {
+        event.preventDefault();
+        this.setState({
+            loginForm: !this.state.loginForm 
+        })
+    }
+
     handleSubmit = event => {
         event.preventDefault();
-        console.log(this.state);
-
+        
         let data = new FormData();
-        data.append( "json", JSON.stringify( this.state ));
-        console.log(data);
+        const state_data = (this.state.loginForm) 
+            ? {login: this.state.login, password: this.state.password} 
+            : {login: this.state.login, password: this.state.password, password2: this.state.password2};
+        data.append( "json", JSON.stringify( state_data ));
         const query = {
             method: 'POST',
-            body: data,
-            mode: 'no-cors'
+            body: data
         }
-
-        fetch('//radmvd/backend/login.php', query)
+        const path = (this.state.loginForm) ? 'login.php' : 'signup.php';
+        fetch('//radmvd/backend/' + path, query)
+            .then(response => response.json())
+            .then(data => {
+                this.props.onChangeForm( data.logged );
+            })
             .catch(error => console.log(error));
     }
 
     render() {
+        
+        let pass_check = null;
+        if (!this.state.loginForm) {
+            pass_check = <input className="enjoy-input" type="password" name="password2" placeholder="Пароль еще раз" value={this.state.password2} onChange={this.handleChange}/>
+        } 
+
         return (
             <form onSubmit={this.handleSubmit}>
-                <input className="enjoy-input" type="text" name="username" placeholder="Логин" value={this.state.title} onChange={this.handleChange}/>
-                <input className="enjoy-input" type="password" name="password" placeholder="Пароль" value={this.state.text} onChange={this.handleChange}/>
-                <button className="button">Войти</button>
+                <input className="enjoy-input" type="text" name="login" placeholder="Логин" value={this.state.login} onChange={this.handleChange}/>
+                <input className="enjoy-input" type="password" name="password" placeholder="Пароль" value={this.state.password} onChange={this.handleChange}/>
+                {pass_check}
+                <button className="button">{(this.state.loginForm) ? 'Войти' : 'Зарегистрироваться'}</button>
+                <span className="change-form">или <a href='' onClick={this.handleChangeForm}>{(this.state.loginForm) ? 'Зарегистрироваться' : 'Войти'}</a></span>
             </form>
         )
     }

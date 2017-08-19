@@ -2,29 +2,9 @@ import React from 'react';
 import '../css/newsList.css';
 
 class NewsList extends React.Component {
-    
-    state = {
-        news: []
-    }
-
-    componentDidMount() {
-        this.getNews()
-    }
-
-    getNews = () => {
-
-        fetch('//radmvd/backend/getNews.php')
-            .then(response => response.json())
-            .then(data => {
-                this.setState({
-                    news: data.news
-                })
-            })
-            .catch(error => console.log(error));
-    }
 
     render() {
-        const item = this.state.news.map(newsItem => 
+        const item = this.props.news.map(newsItem => 
             <div className="news-item" key={newsItem.id}>
                 <h1 className="title-news">{newsItem.title}</h1>            
                 <p className="text-news">{newsItem.text}</p>
