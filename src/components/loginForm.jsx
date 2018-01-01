@@ -37,7 +37,7 @@ class LoginForm extends React.Component {
             body: data
         }
         const path = (this.state.loginForm) ? 'login.php' : 'signup.php';
-        fetch('//radmvd/backend/' + path, query)
+        fetch('//radmvd.local/api/' + path, query)
             .then(response => response.json())
             .then(data => {
                 this.props.onChangeForm( data.logged );

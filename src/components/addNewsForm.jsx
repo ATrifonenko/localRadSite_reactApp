@@ -29,7 +29,7 @@ class AddNewsForm extends React.Component {
             mode: 'no-cors'
         }
 
-        fetch('//radmvd/backend/addNews.php', query)
+        fetch('//radmvd.local/api/addNews.php', query)
             .then(() => {
                 this.setState({
                     title: '',

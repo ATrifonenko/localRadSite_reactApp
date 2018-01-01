@@ -18,7 +18,7 @@ class App extends Component {
     }
 
 	getMain = () => {
-	  fetch('//radmvd/backend/getMain.php')
+	  fetch('//radmvd.local/api/getMain.php')
 	      .then(response => response.json())
 	      .then(data => {
 	          this.setState({
