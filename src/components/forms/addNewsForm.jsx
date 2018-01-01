@@ -1,5 +1,5 @@
 import React from "react";
-import "../css/addNewsForm.css";
+import "../../css/addNewsForm.css";
 
 class AddNewsForm extends React.Component {
   state = {

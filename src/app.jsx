@@ -1,53 +1,17 @@
-import React, { Component } from "react";
+import React from "react";
+import { Route } from "react-router-dom";
 import "./app.css";
 
 import Header from "./components/header";
 import Footer from "./components/footer";
-import NewsList from "./components/newsList";
-import AddNewsForm from "./components/addNewsForm";
-import LoginForm from "./components/loginForm";
+import HomePage from "./components/pages/HomePage";
 
-class App extends Component {
-  state = {
-    news: [],
-    logged: false
-  };
-
-  componentDidMount() {
-    this.getMain();
-  }
-
-  getMain = () => {
-    fetch("//radmvd.local/api/getMain.php")
-      .then(response => response.json())
-      .then(data => {
-        this.setState({
-          news: data.news,
-          logged: data.logged
-        });
-      })
-      .catch(error => console.log(error));
-  };
-
-  changeForm = logged => {
-    this.setState({
-      logged
-    });
-  };
-
+class App extends React.Component {
   render() {
     return (
       <div className="app">
         <Header />
-        {this.state.logged ? (
-          <AddNewsForm />
-        ) : (
-          <LoginForm
-            logged={this.state.logged}
-            onChangeForm={this.changeForm}
-          />
-        )}
-        <NewsList news={this.state.news} />
+        <Route path="/" exect component={HomePage} />
         <Footer />
       </div>
     );

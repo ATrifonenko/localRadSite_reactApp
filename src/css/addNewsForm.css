@@ -70,11 +70,15 @@ span.change-form {
   font-size: 14px;
 }
 
-span.change-form a {
-  color: #007cad;
-  text-decoration: none;
+button.change-form:hover {
+  border-bottom: 1px solid #007cad;
 }
 
-span.change-form a:hover {
-  text-decoration: underline;
+button.change-form {
+  background: none !important;
+  color: #007cad;
+  border: none;
+  padding: 0 !important;
+  font: inherit;
+  cursor: pointer;
 }
