@@ -1,64 +1,65 @@
 .main-nav {
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: space-around;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-around;
 }
 
 .menu-item {
-    display: inline-block;
-    flex-grow: 1;
-    height: 40px;
-    line-height: 40px;
-    margin: 0 10px;
-    font-weight: bold;
-    font-size: 18px;
-    text-align: center;
-    background: #cae4f7;
-    background-image: linear-gradient(to bottom, #e5f3fe, #cae1f1);
-    border-radius: 8px;
-    box-shadow: 0px 1px 2px #cae1f1;
-    color: #0055A6;
-    font-size: 18px;
-    text-decoration: none;
+  display: inline-block;
+  flex-grow: 1;
+  height: 40px;
+  line-height: 40px;
+  margin: 0 10px;
+  font-weight: bold;
+  font-size: 18px;
+  text-align: center;
+  background: #cae4f7;
+  background-image: linear-gradient(to bottom, #e5f3fe, #cae1f1);
+  border-radius: 8px;
+  box-shadow: 0px 1px 2px #cae1f1;
+  color: #0055a6;
+  font-size: 18px;
+  text-decoration: none;
 }
 
 .menu-item:hover {
-    color: #0055A6;
-    background: #cae1f1;
-    text-decoration: underline;
+  color: #0055a6;
+  background: #cae1f1;
+  text-decoration: underline;
 }
 
 .title-block {
-    display: block;
-    position: relative;
+  display: block;
+  position: relative;
 }
 
 .title-block::after {
   content: "";
-  background: url("https://sp.mycdn.me/getTheme?photoId=365&type=62&v=1") no-repeat;
+  background: url("https://sp.mycdn.me/getTheme?photoId=365&type=62&v=1")
+    no-repeat;
   opacity: 0.8;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
   position: absolute;
-  z-index: -1;   
+  z-index: -1;
 }
 
 .link {
-    display: inline-block;
-    vertical-align: middle;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .logo {
-    width: 250px;
-    margin: 50px 50px 50px 0;
+  width: 250px;
+  margin: 50px 50px 50px 0;
 }
 
 h1.title {
-    display: inline-block;
-    font-family: "Roboto";
-    color: #d2ab67;
-    font-size: 38px;
-    text-shadow: 1px 1px 2px #231f20;
+  display: inline-block;
+  font-family: "Roboto";
+  color: #d2ab67;
+  font-size: 38px;
+  text-shadow: 1px 1px 2px #231f20;
 }
