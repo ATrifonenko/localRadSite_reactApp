@@ -1,13 +1,17 @@
 import React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import NewsList from "../newsList";
 import LoginForm from "../forms/LoginForm";
 import SignUpForm from "../forms/SignUpForm";
 import AddNewsForm from "../forms/addNewsForm";
+import { login } from "../../actions/auth";
 
 class HomePage extends React.Component {
   state = {
     news: [],
-    isLoginForm: true
+    isLoginForm: true,
+    logged: false
   };
 
   componentDidMount() {
@@ -34,7 +38,7 @@ class HomePage extends React.Component {
   };
 
   submit = data => {
-    console.log(data);
+    this.props.login(data).then(console.log(""));
   };
 
   render() {
@@ -52,4 +56,8 @@ class HomePage extends React.Component {
   }
 }
 
-export default HomePage;
+HomePage.propTypes = {
+  login: PropTypes.func.isRequired
+};
+
+export default connect(null, { login })(HomePage);
