@@ -1,17 +1,11 @@
 import React from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
 import NewsList from "../newsList";
-import LoginForm from "../forms/LoginForm";
-import SignUpForm from "../forms/SignUpForm";
-import AddNewsForm from "../forms/addNewsForm";
-import { login } from "../../actions/auth";
+import SideBar from "../SideBar";
 
 class HomePage extends React.Component {
   state = {
     news: [],
-    isLoginForm: true,
-    logged: false
+    isLoginForm: true
   };
 
   componentDidMount() {
@@ -23,11 +17,10 @@ class HomePage extends React.Component {
       .then(response => response.json())
       .then(data => {
         this.setState({
-          news: data.news,
-          logged: data.logged
+          news: data.news
         });
       })
-      .catch(error => console.log(error));
+      .catch();
   };
 
   changeForm = e => {
@@ -37,27 +30,14 @@ class HomePage extends React.Component {
     });
   };
 
-  submit = data => {
-    this.props.login(data).then(console.log(""));
-  };
-
   render() {
-    const form = this.state.isLoginForm ? (
-      <LoginForm submit={this.submit} changeForm={this.changeForm} />
-    ) : (
-      <SignUpForm submit={this.submit} changeForm={this.changeForm} />
-    );
     return (
-      <div className="app">
-        {this.state.logged ? <AddNewsForm /> : form}
-        <NewsList news={this.state.news} />
+      <div className="main-wrapper">
+        {<NewsList news={this.state.news} />}
+        <SideBar />
       </div>
     );
   }
 }
 
-HomePage.propTypes = {
-  login: PropTypes.func.isRequired
-};
-
-export default connect(null, { login })(HomePage);
+export default HomePage;

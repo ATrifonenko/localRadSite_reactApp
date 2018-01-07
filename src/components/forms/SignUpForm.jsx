@@ -1,8 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
 import _ from "lodash";
+import { connect } from "react-redux";
 import "../../css/addNewsForm.css";
 import InlineError from "../messages/InlineError";
+import { signup } from "../../actions/auth";
+import { changeForm } from "../../actions/sidebar";
 
 class SignUpForm extends React.Component {
   state = {
@@ -25,7 +28,7 @@ class SignUpForm extends React.Component {
     const errors = this.validate(this.state.data);
     this.setState({ errors });
     if (_.isEmpty(errors)) {
-      this.props.submit(this.state.data);
+      this.props.signup(this.state.data);
     }
 
     // const data = new FormData();
@@ -106,8 +109,8 @@ class SignUpForm extends React.Component {
 }
 
 SignUpForm.propTypes = {
-  submit: PropTypes.func.isRequired,
+  signup: PropTypes.func.isRequired,
   changeForm: PropTypes.func.isRequired
 };
 
-export default SignUpForm;
+export default connect(null, { signup, changeForm })(SignUpForm);

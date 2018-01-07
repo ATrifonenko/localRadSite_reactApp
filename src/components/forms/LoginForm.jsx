@@ -1,6 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import _ from "lodash";
+import { connect } from "react-redux";
+import { login } from "../../actions/auth";
+import { changeForm } from "../../actions/sidebar";
 import "../../css/addNewsForm.css";
 import InlineError from "../messages/InlineError";
 
@@ -24,32 +27,8 @@ class LoginForm extends React.Component {
     const errors = this.validate(this.state.data);
     this.setState({ errors });
     if (_.isEmpty(errors)) {
-      this.props.submit(this.state.data);
+      this.props.login(this.state.data).then();
     }
-
-    // const data = new FormData();
-    // const state_data = this.state.isLoginForm
-    //   ? {
-    //       login: this.state.data.login,
-    //       password: this.state.data.password
-    //     }
-    //   : {
-    //       login: this.state.data.login,
-    //       password: this.state.data.password,
-    //       password2: this.state.data.password2
-    //     };
-    // data.append("json", JSON.stringify(state_data));
-    // const query = {
-    //   method: "POST",
-    //   body: data
-    // };
-    // const path = this.state.isLoginForm ? "login.php" : "signup.php";
-    // fetch("//radmvd.local/api/" + path, query)
-    //   .then(response => response.json())
-    //   .then(data => {
-    //     this.props.onChangeForm(data.logged);
-    //   })
-    //   .catch(error => console.log(error));
   };
 
   validate = data => {
@@ -95,8 +74,8 @@ class LoginForm extends React.Component {
 }
 
 LoginForm.propTypes = {
-  submit: PropTypes.func.isRequired,
+  login: PropTypes.func.isRequired,
   changeForm: PropTypes.func.isRequired
 };
 
-export default LoginForm;
+export default connect(null, { login, changeForm })(LoginForm);
