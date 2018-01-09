@@ -4,11 +4,14 @@ export default {
   user: {
     login: credentials =>
       axios
-        .post("//radmvd.local/api/login.php", JSON.stringify(credentials))
+        .post("/api/login.php", JSON.stringify(credentials))
         .then(res => res.data),
     signup: credentials =>
       axios
-        .post("//radmvd.local/api/signup.php", JSON.stringify(credentials))
+        .post("/api/signup.php", JSON.stringify(credentials))
         .then(res => res.data)
+  },
+  main: {
+    getMain: () => axios.post("/api/getMain.php").then(res => res.data)
   }
 };

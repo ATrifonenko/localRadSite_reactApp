@@ -1,34 +1,25 @@
 import React from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { userLoggedIn } from "../../actions/auth";
 import NewsList from "../newsList";
 import SideBar from "../SideBar";
+import api from "../../api";
 
 class HomePage extends React.Component {
   state = {
-    news: [],
-    isLoginForm: true
+    news: []
   };
 
   componentDidMount() {
     this.getMain();
   }
 
-  getMain = () => {
-    fetch("//radmvd.local/api/getMain.php")
-      .then(response => response.json())
-      .then(data => {
-        this.setState({
-          news: data.news
-        });
-      })
-      .catch();
-  };
-
-  changeForm = e => {
-    e.preventDefault();
-    this.setState({
-      isLoginForm: !this.state.isLoginForm
+  getMain = () =>
+    api.main.getMain().then(res => {
+      this.props.userLoggedIn(res.user);
+      this.setState({ news: res.news });
     });
-  };
 
   render() {
     return (
@@ -40,4 +31,8 @@ class HomePage extends React.Component {
   }
 }
 
-export default HomePage;
+HomePage.propTypes = {
+  userLoggedIn: PropTypes.func.isRequired
+};
+
+export default connect(null, { userLoggedIn })(HomePage);
