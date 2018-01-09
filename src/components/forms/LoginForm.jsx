@@ -27,7 +27,9 @@ class LoginForm extends React.Component {
     const errors = this.validate(this.state.data);
     this.setState({ errors });
     if (_.isEmpty(errors)) {
-      this.props.login(this.state.data).then();
+      this.props
+        .login(this.state.data)
+        .catch(err => this.setState({ errors: err.response.data.errors }));
     }
   };
 
@@ -61,6 +63,7 @@ class LoginForm extends React.Component {
           value={data.password}
           onChange={this.onChange}
         />
+        {errors.global && <InlineError text={errors.global} />}
         <button className="button">Войти</button>
         <span className="change-form">
           или{" "}

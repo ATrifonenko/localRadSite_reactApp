@@ -28,32 +28,10 @@ class SignUpForm extends React.Component {
     const errors = this.validate(this.state.data);
     this.setState({ errors });
     if (_.isEmpty(errors)) {
-      this.props.signup(this.state.data);
+      this.props
+        .signup(this.state.data)
+        .catch(err => this.setState({ errors: err.response.data.errors }));
     }
-
-    // const data = new FormData();
-    // const state_data = this.state.isLoginForm
-    //   ? {
-    //       login: this.state.data.login,
-    //       password: this.state.data.password
-    //     }
-    //   : {
-    //       login: this.state.data.login,
-    //       password: this.state.data.password,
-    //       password2: this.state.data.password2
-    //     };
-    // data.append("json", JSON.stringify(state_data));
-    // const query = {
-    //   method: "POST",
-    //   body: data
-    // };
-    // const path = this.state.isLoginForm ? "login.php" : "signup.php";
-    // fetch("//radmvd.local/api/" + path, query)
-    //   .then(response => response.json())
-    //   .then(data => {
-    //     this.props.onChangeForm(data.logged);
-    //   })
-    //   .catch(error => console.log(error));
   };
 
   validate = data => {
@@ -96,6 +74,7 @@ class SignUpForm extends React.Component {
           value={data.password2}
           onChange={this.onChange}
         />
+        {errors.global && <InlineError text={errors.global} />}
         <button className="button">Зарегистрироваться</button>
         <span className="change-form">
           или{" "}

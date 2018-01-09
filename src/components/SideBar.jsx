@@ -5,11 +5,16 @@ import LoginForm from "./forms/LoginForm";
 import SignUpForm from "./forms/SignUpForm";
 import "../css/sideBar.css";
 
-const SideBar = ({ logged, isLoginForm }) => (
-  <div className="sidebar">
-    {logged ? <addNewsForm /> : isLoginForm ? <LoginForm /> : <SignUpForm />}
-  </div>
-);
+const SideBar = ({ logged, isLoginForm }) => {
+  let form;
+  if (logged) {
+    form = <addNewsForm />;
+  } else if (isLoginForm) {
+    form = <LoginForm />;
+  } else form = <SignUpForm />;
+
+  return <div className="sidebar">{form}</div>;
+};
 
 function mapStateToProps(state) {
   return {
