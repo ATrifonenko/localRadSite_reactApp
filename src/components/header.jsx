@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "../css/header.css";
 
 function Header() {
@@ -15,12 +16,12 @@ function Header() {
         <h1 className="title">Информационный сайт ОМВД по г.Радужному</h1>
       </div>
       <nav className="main-nav">
-        <a className="menu-item" href="">
+        <Link className="menu-item" to="/">
           <span>Новости</span>
-        </a>
-        <a className="menu-item" href="">
+        </Link>
+        <Link className="menu-item" to="/phonebook">
           <span>Справочник</span>
-        </a>
+        </Link>
         <a className="menu-item" href="">
           <span>Сервисы ИСОД</span>
         </a>
