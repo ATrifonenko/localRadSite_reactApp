@@ -1,0 +1,17 @@
+.dashboard {
+  margin: 25px;
+}
+
+.dashboard-news {
+  display: flex;
+}
+
+.list-news {
+  flex-grow: 5;
+  margin-right: 25px;
+}
+
+.add-news {
+  flex-grow: 1;
+  min-width: 400px;
+}

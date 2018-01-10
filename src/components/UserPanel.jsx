@@ -8,7 +8,7 @@ import "../css/addNewsForm.css";
 const UserPanel = props => (
   <div>
     <h3>Привет {props.name}</h3>
-    <Link to="/testing">Админка</Link>
+    <Link to="/dashboard">Админка</Link>
     <button className="button">Добавить новость</button>
     <button className="button">Тестирование</button>
     <button className="button" onClick={props.logout}>

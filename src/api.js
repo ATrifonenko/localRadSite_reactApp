@@ -14,5 +14,9 @@ export default {
   },
   main: {
     getMain: () => axios.post("/api/getMain.php").then(res => res.data)
+  },
+  moderate: {
+    publish: data =>
+      axios.post("/api/addNews.php", JSON.stringify(data)).then(res => res.data)
   }
 };
