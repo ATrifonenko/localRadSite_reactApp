@@ -3,12 +3,13 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import LoginForm from "./forms/LoginForm";
 import SignUpForm from "./forms/SignUpForm";
+import UserPanel from "./UserPanel";
 import "../css/sideBar.css";
 
 const SideBar = ({ logged, isLoginForm }) => {
   let form;
   if (logged) {
-    form = <addNewsForm />;
+    form = <UserPanel />;
   } else if (isLoginForm) {
     form = <LoginForm />;
   } else form = <SignUpForm />;

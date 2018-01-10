@@ -1,4 +1,4 @@
 .sidebar {
-  float: right;
+  min-width: 337px;
   margin: 25px;
 }

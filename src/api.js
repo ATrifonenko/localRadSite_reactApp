@@ -6,6 +6,7 @@ export default {
       axios
         .post("/api/login.php", JSON.stringify(credentials))
         .then(res => res.data),
+    logout: () => axios.get("/api/logout.php").then(res => res.data),
     signup: credentials =>
       axios
         .post("/api/signup.php", JSON.stringify(credentials))
