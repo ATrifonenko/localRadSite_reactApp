@@ -12,7 +12,8 @@ class SignUpForm extends React.Component {
     data: {
       login: "",
       password: "",
-      password2: ""
+      password2: "",
+      name: ""
     },
     errors: {}
   };
@@ -36,9 +37,24 @@ class SignUpForm extends React.Component {
 
   validate = data => {
     const errors = {};
-    if (!data.login) errors.login = "Не введен логин";
-    if (!data.password) errors.password = "Не введен пароль";
-    if (!data.password2) errors.password2 = "Не введен пароль 2";
+    if (
+      !data.login ||
+      !/^(?=.{3,20}$)(?![_.-])(?!.*[_.-]{2})[a-zA-Z0-9_-]+([^._-])$/.test(
+        data.login
+      )
+    )
+      errors.login = "Логин не введен";
+    if (
+      !data.password ||
+      !/^((?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9]).{5,})\S$/.test(data.password)
+    )
+      errors.password = "Пароль не введен или введен не верно";
+    if (!data.password2) errors.password2 = "Не введен пароль для проверки";
+    if (data.password !== data.password2) {
+      errors.password = "Пароли не совпадают";
+      errors.password2 = "Пароли не совпадают";
+    }
+    if (!data.name) errors.name = "Как к Вам обращаться?";
     return errors;
   };
 
@@ -72,6 +88,15 @@ class SignUpForm extends React.Component {
           name="password2"
           placeholder="Пароль еще раз"
           value={data.password2}
+          onChange={this.onChange}
+        />
+        {errors.name && <InlineError text={errors.name} />}
+        <input
+          className="enjoy-input"
+          type="text"
+          name="name"
+          placeholder="Ваше имя"
+          value={data.name}
           onChange={this.onChange}
         />
         {errors.global && <InlineError text={errors.global} />}

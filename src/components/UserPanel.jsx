@@ -5,12 +5,13 @@ import { logout } from "../actions/auth";
 
 const UserPanel = props => (
   <div>
-    <h3>Привет %username%</h3>
+    <h3>Привет {props.name}</h3>
     <button onClick={props.logout}>Выйти</button>
   </div>
 );
 
 UserPanel.propTypes = {
-  logout: PropTypes.func.isRequired
+  logout: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired
 };
 export default connect(null, { logout })(UserPanel);

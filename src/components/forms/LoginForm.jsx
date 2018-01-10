@@ -35,8 +35,8 @@ class LoginForm extends React.Component {
 
   validate = data => {
     const errors = {};
-    if (!data.login) errors.login = "Не введен логин";
-    if (!data.password) errors.password = "Не введен пароль";
+    if (!data.login) errors.login = "Логин не введен ";
+    if (!data.password) errors.password = "Пароль не введен";
     return errors;
   };
 

@@ -17,10 +17,10 @@ export const userSignedUp = user => ({
 });
 
 export const login = credentials => dispatch =>
-  api.user.login(credentials).then(user => dispatch(userLoggedIn(user)));
+  api.user.login(credentials).then(res => dispatch(userLoggedIn(res.user)));
 
 export const logout = () => dispatch =>
-  api.user.logout().then(user => dispatch(userLoggedOut(user)));
+  api.user.logout().then(res => dispatch(userLoggedOut(res.user)));
 
 export const signup = credentials => dispatch =>
-  api.user.signup(credentials).then(user => dispatch(userSignedUp(user)));
+  api.user.signup(credentials).then(res => dispatch(userSignedUp(res.user)));
