@@ -1,77 +1,96 @@
 import React from "react";
+import _ from "lodash";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { Form, TextArea, Button } from "semantic-ui-react";
+import InlineError from "../messages/InlineError";
 import "../../css/addNewsForm.css";
 
 class AddNewsForm extends React.Component {
   state = {
-    title: "",
-    text: "",
-    author: ""
+    data: {
+      title: "",
+      text: "",
+      author: this.props.author
+    },
+    loading: false,
+    errors: {}
   };
 
-  handleChange = event => {
-    const name = event.target.name;
-
+  componentWillReceiveProps(props) {
     this.setState({
-      [name]: event.target.value
+      data: {
+        author: props.author
+      }
     });
+  }
+
+  onChange = e =>
+    this.setState({
+      data: { ...this.state.data, [e.target.name]: e.target.value }
+    });
+
+  onSubmit = e => {
+    e.preventDefault();
+    const errors = this.validate(this.state.data);
+    this.setState({ errors });
+    if (_.isEmpty(errors)) {
+      this.setState({
+        data: { ...this.state.data, title: "", text: "" },
+        loading: true
+      });
+      this.props
+        .submit(this.state.data)
+        .then(this.setState({ loading: false }))
+        .catch(err =>
+          this.setState({ errors: err.response.data.errors, loading: false })
+        );
+    }
   };
 
-  handleSubmit = event => {
-    event.preventDefault();
-    console.log(this.state);
-
-    let data = new FormData();
-    data.append("json", JSON.stringify(this.state));
-    console.log(data);
-    const query = {
-      method: "POST",
-      body: data,
-      mode: "no-cors"
-    };
-
-    fetch("//radmvd.local/api/addNews.php", query)
-      .then(() => {
-        this.setState({
-          title: "",
-          text: "",
-          author: ""
-        });
-      })
-      .catch(error => console.log(error));
+  validate = data => {
+    const errors = {};
+    if (!data.title) errors.title = "Нет заголовка";
+    if (!data.text) errors.text = "Нет текста";
+    return errors;
   };
 
   render() {
+    const { data, errors, loading } = this.state;
+
     return (
-      <form onSubmit={this.handleSubmit}>
-        <input
-          className="enjoy-input"
-          type="text"
-          name="title"
-          placeholder="Заголовок"
-          value={this.state.title}
-          onChange={this.handleChange}
-        />
-        <textarea
-          className="enjoy-input"
-          cols="40"
-          rows="20"
-          name="text"
+      <Form onSubmit={this.onSubmit} loading={loading}>
+        <Form.Field error={!!errors.title}>
+          <input
+            placeholder="Заголовок"
+            name="title"
+            value={data.title}
+            onChange={this.onChange}
+          />
+          {errors.title && <InlineError text={errors.title} />}
+        </Form.Field>
+        <TextArea
+          autoHeight
           placeholder="Текст"
-          value={this.state.text}
-          onChange={this.handleChange}
+          name="text"
+          value={data.text}
+          onChange={this.onChange}
         />
-        <input
-          className="enjoy-input"
-          type="text"
-          name="author"
-          placeholder="Имя пользователя"
-          value={this.state.author}
-          onChange={this.handleChange}
-        />
-        <button className="button">Добавить</button>
-      </form>
+        <Button primary>Добавить</Button>
+      </Form>
     );
   }
 }
 
-export default AddNewsForm;
+function mapStateToProps(state) {
+  return {
+    author: state.user.name
+  };
+}
+
+AddNewsForm.propTypes = {
+  submit: PropTypes.func.isRequired,
+  author: PropTypes.string.isRequired
+};
+
+export default connect(mapStateToProps)(AddNewsForm);

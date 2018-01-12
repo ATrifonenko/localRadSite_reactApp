@@ -1,51 +1,30 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Form, Button, TextArea, List } from "semantic-ui-react";
+import { Button, List } from "semantic-ui-react";
 import { connect } from "react-redux";
 import api from "../../api";
 import "../../css/dashboard.css";
+import AddNewsForm from "../forms/AddNewsForm";
+import { newsTitle } from "../../actions/dashboard";
 
 class DashboardPage extends React.Component {
-  state = {
-    data: {
-      title: "",
-      text: "",
-      author: this.props.author
-    },
-    news: [
-      {
-        title: "A Complete Guide to Flexbox"
-      },
-      {
-        title:
-          "15 часов и две тысячи рублей: как сделать картину из GTA 5 в реальной жизни 15 часов и две тысячи рублей: как сделать картину из GTA 5 в реальной жизни"
-      },
-      {
-        title: "Заголовок 1"
-      },
-      {
-        title: "Заголовок 1"
-      },
-      {
-        title: "Заголовок 1"
-      }
-    ]
-  };
   onChange = e =>
     this.setState({
       data: { ...this.state.data, [e.target.name]: e.target.value }
     });
 
-  onSubmit = () => api.moderate.publish(this.state.data).then();
+  onSubmit = data =>
+    api.dashboard.news.addNews(data).then(res => this.props.newsTitle(res));
 
   render() {
-    const listItem = this.state.news.map(newsItem => (
+    console.log(this.props);
+    const listTitle = this.props.news.map(news => (
       <List.Item>
         <List.Content floated="right" verticalAlign="middle">
           <Button compact circular icon="edit" color="blue" />
           <Button compact negative circular icon="delete" />
         </List.Content>
-        <List.Content>{newsItem.title}</List.Content>
+        <List.Content>{news.title}</List.Content>
       </List.Item>
     ));
     return (
@@ -55,28 +34,11 @@ class DashboardPage extends React.Component {
         <div className="dashboard-news">
           <div className="list-news">
             <p>Мои новости:</p>
-            <List divided>{listItem}</List>
+            <List divided>{listTitle}</List>
           </div>
           <div className="add-news">
             <p>Добавить новость</p>
-            <Form>
-              <Form.Field>
-                <input
-                  placeholder="Заголовок"
-                  name="title"
-                  onChange={this.onChange}
-                />
-              </Form.Field>
-              <TextArea
-                autoHeight
-                placeholder="Текст"
-                name="text"
-                onChange={this.onChange}
-              />
-              <Button primary onClick={this.onSubmit}>
-                Добавить
-              </Button>
-            </Form>
+            <AddNewsForm submit={this.onSubmit} />
           </div>
         </div>
       </div>
@@ -86,11 +48,13 @@ class DashboardPage extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    author: state.user.name
+    news: state.dashboard.news
   };
 }
 
 DashboardPage.propTypes = {
-  author: PropTypes.string.isRequired
+  newsTitle: PropTypes.func.isRequired,
+  news: PropTypes.arrayOf(PropTypes.object).isRequired
 };
-export default connect(mapStateToProps)(DashboardPage);
+
+export default connect(mapStateToProps, { newsTitle })(DashboardPage);
