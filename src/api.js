@@ -2,6 +2,7 @@ import axios from "axios";
 
 export default {
   user: {
+    checkAuth: () => axios.get("/api/checkAuth.php").then(res => res.data),
     login: credentials =>
       axios
         .post("/api/login.php", JSON.stringify(credentials))

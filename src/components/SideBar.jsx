@@ -6,15 +6,12 @@ import SignUpForm from "./forms/SignUpForm";
 import UserPanel from "./UserPanel";
 import "../css/sideBar.css";
 
-const SideBar = ({ logged, name, isLoginForm }) => {
-  let form;
-  if (logged) {
-    form = <UserPanel name={name} />;
-  } else if (isLoginForm) {
-    form = <LoginForm />;
-  } else form = <SignUpForm />;
-
-  return <div className="sidebar">{form}</div>;
+const SideBar = ({ logged, isLoginForm }) => {
+  let userPanel;
+  logged
+    ? (userPanel = <UserPanel />)
+    : (userPanel = isLoginForm ? <LoginForm /> : <SignUpForm />);
+  return <div className="sidebar">{userPanel}</div>;
 };
 
 function mapStateToProps(state) {
@@ -27,8 +24,7 @@ function mapStateToProps(state) {
 
 SideBar.propTypes = {
   logged: PropTypes.bool.isRequired,
-  isLoginForm: PropTypes.bool.isRequired,
-  name: PropTypes.string
+  isLoginForm: PropTypes.bool.isRequired
 };
 
 export default connect(mapStateToProps)(SideBar);

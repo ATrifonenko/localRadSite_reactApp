@@ -17,8 +17,14 @@ const UserPanel = props => (
   </div>
 );
 
+function mapStateToPrors(state) {
+  return {
+    name: state.user.name
+  };
+}
+
 UserPanel.propTypes = {
   logout: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired
 };
-export default connect(null, { logout })(UserPanel);
+export default connect(mapStateToPrors, { logout })(UserPanel);

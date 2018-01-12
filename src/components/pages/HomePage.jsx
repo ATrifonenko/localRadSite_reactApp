@@ -1,7 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-import PropTypes from "prop-types";
-import { userLoggedIn } from "../../actions/auth";
 import NewsList from "../newsList";
 import SideBar from "../SideBar";
 import api from "../../api";
@@ -17,7 +15,6 @@ class HomePage extends React.Component {
 
   getMain = () =>
     api.main.getMain().then(res => {
-      this.props.userLoggedIn(res.user);
       this.setState({ news: res.news });
     });
 
@@ -31,8 +28,4 @@ class HomePage extends React.Component {
   }
 }
 
-HomePage.propTypes = {
-  userLoggedIn: PropTypes.func.isRequired
-};
-
-export default connect(null, { userLoggedIn })(HomePage);
+export default connect(null)(HomePage);
