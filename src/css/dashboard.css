@@ -7,11 +7,10 @@
 }
 
 .list-news {
-  flex-grow: 5;
+  flex-grow: 1;
   margin-right: 25px;
 }
 
 .add-news {
-  flex-grow: 1;
   min-width: 400px;
 }

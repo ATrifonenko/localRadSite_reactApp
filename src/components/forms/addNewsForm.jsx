@@ -8,6 +8,7 @@ import "../../css/addNewsForm.css";
 
 class AddNewsForm extends React.Component {
   state = {
+    editNews: "",
     data: {
       title: "",
       text: "",
@@ -18,11 +19,26 @@ class AddNewsForm extends React.Component {
   };
 
   componentWillReceiveProps(props) {
-    this.setState({
-      data: {
-        author: props.author
-      }
-    });
+    if (this.state.editNews !== props.editNews) {
+      const index = props.news.findIndex(
+        element => element.news_id === props.editNews
+      );
+      this.setState({
+        data: {
+          ...this.state.data,
+          title: props.news[index].title,
+          text: props.news[index].text
+        },
+        editNews: props.editNews
+      });
+    } else {
+      this.setState({
+        data: {
+          ...this.state.data,
+          author: props.author
+        }
+      });
+    }
   }
 
   onChange = e =>
@@ -36,12 +52,16 @@ class AddNewsForm extends React.Component {
     this.setState({ errors });
     if (_.isEmpty(errors)) {
       this.setState({
-        data: { ...this.state.data, title: "", text: "" },
         loading: true
       });
       this.props
         .submit(this.state.data)
-        .then(this.setState({ loading: false }))
+        .then(
+          this.setState({
+            data: { ...this.state.data, title: "", text: "" },
+            loading: false
+          })
+        )
         .catch(err =>
           this.setState({ errors: err.response.data.errors, loading: false })
         );
@@ -84,13 +104,16 @@ class AddNewsForm extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    author: state.user.name
+    author: state.user.name || "",
+    news: state.dashboard.news
   };
 }
 
 AddNewsForm.propTypes = {
   submit: PropTypes.func.isRequired,
-  author: PropTypes.string.isRequired
+  author: PropTypes.string.isRequired,
+  editNews: PropTypes.string.isRequired,
+  news: PropTypes.arrayOf(PropTypes.object).isRequired
 };
 
 export default connect(mapStateToProps)(AddNewsForm);

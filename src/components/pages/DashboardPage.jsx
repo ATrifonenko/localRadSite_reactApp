@@ -8,21 +8,41 @@ import AddNewsForm from "../forms/AddNewsForm";
 import { newsTitle } from "../../actions/dashboard";
 
 class DashboardPage extends React.Component {
-  onChange = e =>
-    this.setState({
-      data: { ...this.state.data, [e.target.name]: e.target.value }
-    });
+  state = {
+    editNews: ""
+  };
+
+  componentDidMount() {
+    api.dashboard.news.getTitle().then(res => this.props.newsTitle(res));
+  }
 
   onSubmit = data =>
     api.dashboard.news.addNews(data).then(res => this.props.newsTitle(res));
 
+  onEditNews = e => {
+    this.setState({
+      editNews: e.target.closest("div[news_id]").getAttribute("news_id")
+    });
+  };
+
   render() {
-    console.log(this.props);
     const listTitle = this.props.news.map(news => (
-      <List.Item>
+      <List.Item key={news.news_id} news_id={news.news_id}>
         <List.Content floated="right" verticalAlign="middle">
-          <Button compact circular icon="edit" color="blue" />
-          <Button compact negative circular icon="delete" />
+          <Button
+            compact
+            circular
+            icon="edit"
+            color="blue"
+            onClick={this.onEditNews}
+          />
+          <Button
+            compact
+            negative
+            circular
+            icon="delete"
+            onClick={this.onDeleteNews}
+          />
         </List.Content>
         <List.Content>{news.title}</List.Content>
       </List.Item>
@@ -38,7 +58,10 @@ class DashboardPage extends React.Component {
           </div>
           <div className="add-news">
             <p>Добавить новость</p>
-            <AddNewsForm submit={this.onSubmit} />
+            <AddNewsForm
+              editNews={this.state.editNews}
+              submit={this.onSubmit}
+            />
           </div>
         </div>
       </div>
