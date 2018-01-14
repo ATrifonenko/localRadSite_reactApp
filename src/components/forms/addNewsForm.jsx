@@ -22,7 +22,7 @@ class AddNewsForm extends React.Component {
   componentWillReceiveProps(props) {
     if (props.isEditNews) {
       const index = props.news.findIndex(
-        element => element.news_id === props.isEditNews
+        element => element.id === props.isEditNews
       );
       this.setState({
         data: {
@@ -59,12 +59,13 @@ class AddNewsForm extends React.Component {
       });
       this.props
         .submit(this.state.data)
-        .then(
+        .then(() => {
           this.setState({
             data: { ...this.state.data, title: "", text: "", newsId: "" },
             loading: false
-          })
-        )
+          });
+          this.props.editingNewsState("");
+        })
         .catch(err =>
           this.setState({ errors: err.response.data.errors, loading: false })
         );

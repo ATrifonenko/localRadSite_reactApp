@@ -22,7 +22,7 @@ class DashboardPage extends React.Component {
 
   render() {
     const listTitle = this.props.news.map(news => (
-      <List.Item key={news.news_id} news_id={news.news_id}>
+      <List.Item key={news.id} news_id={news.id}>
         <List.Content floated="right" verticalAlign="middle">
           <Button
             disabled={!!this.props.isEditNews}
