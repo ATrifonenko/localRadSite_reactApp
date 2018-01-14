@@ -13,11 +13,19 @@ class DashboardPage extends React.Component {
   }
 
   onSubmit = data =>
-    api.dashboard.news.addNews(data).then(res => this.props.newsTitle(res));
+    api.dashboard.news.editNews(data).then(res => this.props.newsTitle(res));
 
   onEditNewsStart = e => {
     const newsId = e.target.closest("div[news_id]").getAttribute("news_id");
     this.props.editingNewsState(newsId);
+  };
+
+  onDeleteNews = e => {
+    const data = {
+      delete: true,
+      newsId: e.target.closest("div[news_id]").getAttribute("news_id")
+    };
+    api.dashboard.news.editNews(data).then(res => this.props.newsTitle(res));
   };
 
   render() {

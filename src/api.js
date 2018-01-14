@@ -19,9 +19,9 @@ export default {
   },
   dashboard: {
     news: {
-      addNews: data =>
+      editNews: data =>
         axios
-          .post("/api/news/addNews.php", JSON.stringify(data))
+          .post("/api/news/editNews.php", JSON.stringify(data))
           .then(res => res.data),
       getTitle: () => axios.post("/api/news/getTitle.php").then(res => res.data)
     }
