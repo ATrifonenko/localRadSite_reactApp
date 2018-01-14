@@ -5,13 +5,9 @@ import { connect } from "react-redux";
 import api from "../../api";
 import "../../css/dashboard.css";
 import AddNewsForm from "../forms/AddNewsForm";
-import { newsTitle } from "../../actions/dashboard";
+import { newsTitle, editingNewsState } from "../../actions/dashboard";
 
 class DashboardPage extends React.Component {
-  state = {
-    editNews: ""
-  };
-
   componentDidMount() {
     api.dashboard.news.getTitle().then(res => this.props.newsTitle(res));
   }
@@ -19,10 +15,9 @@ class DashboardPage extends React.Component {
   onSubmit = data =>
     api.dashboard.news.addNews(data).then(res => this.props.newsTitle(res));
 
-  onEditNews = e => {
-    this.setState({
-      editNews: e.target.closest("div[news_id]").getAttribute("news_id")
-    });
+  onEditNewsStart = e => {
+    const newsId = e.target.closest("div[news_id]").getAttribute("news_id");
+    this.props.editingNewsState(newsId);
   };
 
   render() {
@@ -30,13 +25,15 @@ class DashboardPage extends React.Component {
       <List.Item key={news.news_id} news_id={news.news_id}>
         <List.Content floated="right" verticalAlign="middle">
           <Button
+            disabled={!!this.props.isEditNews}
             compact
             circular
             icon="edit"
             color="blue"
-            onClick={this.onEditNews}
+            onClick={this.onEditNewsStart}
           />
           <Button
+            disabled={!!this.props.isEditNews}
             compact
             negative
             circular
@@ -58,10 +55,7 @@ class DashboardPage extends React.Component {
           </div>
           <div className="add-news">
             <p>Добавить новость</p>
-            <AddNewsForm
-              editNews={this.state.editNews}
-              submit={this.onSubmit}
-            />
+            <AddNewsForm submit={this.onSubmit} />
           </div>
         </div>
       </div>
@@ -71,13 +65,18 @@ class DashboardPage extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    news: state.dashboard.news
+    news: state.dashboard.news,
+    isEditNews: state.dashboard.isEditNews
   };
 }
 
 DashboardPage.propTypes = {
   newsTitle: PropTypes.func.isRequired,
-  news: PropTypes.arrayOf(PropTypes.object).isRequired
+  news: PropTypes.arrayOf(PropTypes.object).isRequired,
+  isEditNews: PropTypes.string.isRequired,
+  editingNewsState: PropTypes.func.isRequired
 };
 
-export default connect(mapStateToProps, { newsTitle })(DashboardPage);
+export default connect(mapStateToProps, { newsTitle, editingNewsState })(
+  DashboardPage
+);

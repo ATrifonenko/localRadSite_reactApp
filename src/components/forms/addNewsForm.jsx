@@ -2,40 +2,43 @@ import React from "react";
 import _ from "lodash";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Form, TextArea, Button } from "semantic-ui-react";
+import { Form, Button } from "semantic-ui-react";
 import InlineError from "../messages/InlineError";
 import "../../css/addNewsForm.css";
+import { editingNewsState } from "../../actions/dashboard";
 
 class AddNewsForm extends React.Component {
   state = {
-    editNews: "",
     data: {
       title: "",
       text: "",
-      author: this.props.author
+      author: this.props.author,
+      newsId: ""
     },
     loading: false,
     errors: {}
   };
 
   componentWillReceiveProps(props) {
-    if (this.state.editNews !== props.editNews) {
+    if (props.isEditNews) {
       const index = props.news.findIndex(
-        element => element.news_id === props.editNews
+        element => element.news_id === props.isEditNews
       );
       this.setState({
         data: {
           ...this.state.data,
           title: props.news[index].title,
-          text: props.news[index].text
-        },
-        editNews: props.editNews
+          text: props.news[index].text,
+          newsId: props.isEditNews
+        }
       });
     } else {
       this.setState({
         data: {
-          ...this.state.data,
-          author: props.author
+          title: "",
+          text: "",
+          author: props.author,
+          newsId: ""
         }
       });
     }
@@ -58,7 +61,7 @@ class AddNewsForm extends React.Component {
         .submit(this.state.data)
         .then(
           this.setState({
-            data: { ...this.state.data, title: "", text: "" },
+            data: { ...this.state.data, title: "", text: "", newsId: "" },
             loading: false
           })
         )
@@ -68,10 +71,13 @@ class AddNewsForm extends React.Component {
     }
   };
 
+  onCancelEdit = () => {
+    this.props.editingNewsState("");
+  };
+
   validate = data => {
     const errors = {};
     if (!data.title) errors.title = "Нет заголовка";
-    if (!data.text) errors.text = "Нет текста";
     return errors;
   };
 
@@ -89,14 +95,21 @@ class AddNewsForm extends React.Component {
           />
           {errors.title && <InlineError text={errors.title} />}
         </Form.Field>
-        <TextArea
+        <Form.TextArea
           autoHeight
           placeholder="Текст"
           name="text"
           value={data.text}
           onChange={this.onChange}
         />
-        <Button primary>Добавить</Button>
+        <Button primary>
+          {this.props.isEditNews ? "Редактировать" : "Добавить"}
+        </Button>
+        {this.props.isEditNews ? (
+          <Button content="Отмена" onClick={this.onCancelEdit} />
+        ) : (
+          ""
+        )}
       </Form>
     );
   }
@@ -105,15 +118,17 @@ class AddNewsForm extends React.Component {
 function mapStateToProps(state) {
   return {
     author: state.user.name || "",
-    news: state.dashboard.news
+    news: state.dashboard.news,
+    isEditNews: state.dashboard.isEditNews
   };
 }
 
 AddNewsForm.propTypes = {
   submit: PropTypes.func.isRequired,
   author: PropTypes.string.isRequired,
-  editNews: PropTypes.string.isRequired,
-  news: PropTypes.arrayOf(PropTypes.object).isRequired
+  news: PropTypes.arrayOf(PropTypes.object).isRequired,
+  isEditNews: PropTypes.string.isRequired,
+  editingNewsState: PropTypes.func.isRequired
 };
 
-export default connect(mapStateToProps)(AddNewsForm);
+export default connect(mapStateToProps, { editingNewsState })(AddNewsForm);

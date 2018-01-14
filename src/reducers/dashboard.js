@@ -1,9 +1,14 @@
-import { GET_NEWS_TITLE } from "../types";
+import { GET_NEWS_TITLE, IS_EDIT_NEWS } from "../types";
 
-export default function dashboard(state = { news: [] }, action = {}) {
+export default function dashboard(
+  state = { news: [], isEditNews: "" },
+  action = {}
+) {
   switch (action.type) {
     case GET_NEWS_TITLE:
-      return action.title;
+      return { ...state, news: action.title.news };
+    case IS_EDIT_NEWS:
+      return { ...state, isEditNews: action.newsId };
     default:
       return state;
   }
