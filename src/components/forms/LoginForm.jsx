@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import _ from "lodash";
+import { Form, Button } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { login } from "../../actions/auth";
 import { changeForm } from "../../actions/sidebar";
@@ -13,7 +14,8 @@ class LoginForm extends React.Component {
       login: "",
       password: ""
     },
-    errors: {}
+    errors: {},
+    loading: false
   };
 
   onChange = e =>
@@ -27,9 +29,12 @@ class LoginForm extends React.Component {
     const errors = this.validate(this.state.data);
     this.setState({ errors });
     if (_.isEmpty(errors)) {
+      this.setState({
+        loading: true
+      });
       this.props
-        .login(this.state.data)
-        .catch(err => this.setState({ errors: err.response.data.errors }));
+        .login(this.state.data).then(() => this.setState({ loading: false }))
+        .catch(err => this.setState({ errors: err.response.data.errors, loading: false }));
     }
   };
 
@@ -41,37 +46,39 @@ class LoginForm extends React.Component {
   };
 
   render() {
-    const { data, errors } = this.state;
+    const { data, errors, loading } = this.state;
 
     return (
-      <form onSubmit={this.onSubmit}>
-        {errors.login && <InlineError text={errors.login} />}
-        <input
-          className="enjoy-input"
-          type="text"
-          name="login"
-          placeholder="Логин"
-          value={data.login}
-          onChange={this.onChange}
-        />
-        {errors.password && <InlineError text={errors.password} />}
-        <input
-          className="enjoy-input"
-          type="password"
-          name="password"
-          placeholder="Пароль"
-          value={data.password}
-          onChange={this.onChange}
-        />
+      <Form onSubmit={this.onSubmit} loading={loading}>
+        <Form.Field error={!!errors.login}>
+          <input
+            type="text"
+            name="login"
+            placeholder="Логин"
+            value={data.login}
+            onChange={this.onChange}
+          />
+          {errors.login && <InlineError text={errors.login} />}
+        </Form.Field>
+        <Form.Field error={!!errors.password}>
+          <input
+            type="password"
+            name="password"
+            placeholder="Пароль"
+            value={data.password}
+            onChange={this.onChange}
+          />
+          {errors.password && <InlineError text={errors.password} />}
+        </Form.Field>
         {errors.global && <InlineError text={errors.global} />}
-        <button className="button">Войти</button>
+        <Button primary>Войти</Button>
         <span className="change-form">
           или{" "}
           <button className="change-form" onClick={this.props.changeForm}>
             Зарегистрироваться
           </button>
         </span>
-      </form>
+      </Form>
     );
   }
 }
