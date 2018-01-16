@@ -6,7 +6,7 @@ export default function dashboard(
 ) {
   switch (action.type) {
     case GET_NEWS_TITLE:
-      return { ...state, news: action.title.news };
+      return { ...state, news: action.dashboardNews.news };
     case IS_EDIT_NEWS:
       return { ...state, isEditNews: action.newsId };
     default:

@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Button, List } from "semantic-ui-react";
+import { Button, List, Popup } from "semantic-ui-react";
 import { connect } from "react-redux";
 import api from "../../api";
 import "../../css/dashboard.css";
@@ -8,6 +8,10 @@ import AddNewsForm from "../forms/AddNewsForm";
 import { newsTitle, editingNewsState } from "../../actions/dashboard";
 
 class DashboardPage extends React.Component {
+  state = {
+    newsId: ""
+  }
+
   componentDidMount() {
     api.dashboard.news.getTitle().then(res => this.props.newsTitle(res));
   }
@@ -20,12 +24,18 @@ class DashboardPage extends React.Component {
     this.props.editingNewsState(newsId);
   };
 
-  onDeleteNews = e => {
+  onDeleteNews = () => {
     const data = {
       delete: true,
-      newsId: e.target.closest("div[news_id]").getAttribute("news_id")
+      newsId: this.state.newsId
     };
     api.dashboard.news.editNews(data).then(res => this.props.newsTitle(res));
+  };
+
+  getNewsId = e => {
+    this.setState({
+      newsId: e.target.closest("div[news_id]").getAttribute("news_id")
+    });
   };
 
   render() {
@@ -38,15 +48,24 @@ class DashboardPage extends React.Component {
             circular
             icon="edit"
             color="blue"
+            title="Редактировать"
             onClick={this.onEditNewsStart}
           />
-          <Button
-            disabled={!!this.props.isEditNews}
-            compact
-            negative
-            circular
-            icon="delete"
-            onClick={this.onDeleteNews}
+          <Popup
+            trigger={
+              <Button
+                disabled={!!this.props.isEditNews}
+                compact
+                negative
+                circular
+                icon="delete"
+                title="Удалить"
+                onClick={this.getNewsId}
+              />
+            }
+            content={<Button color='red' content='Подтвердить удаление!' title="Уверены?" onClick={this.onDeleteNews} />}
+            on='click'
+            position='top center'
           />
         </List.Content>
         <List.Content>{news.title}</List.Content>

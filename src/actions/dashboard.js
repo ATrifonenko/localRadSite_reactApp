@@ -1,9 +1,9 @@
 import { GET_NEWS_TITLE, IS_EDIT_NEWS } from "../types";
 import api from "../api";
 
-export const newsTitle = title => ({
+export const newsTitle = dashboardNews => ({
   type: GET_NEWS_TITLE,
-  title
+  dashboardNews
 });
 
 export const editingNews = newsId => ({
@@ -14,7 +14,7 @@ export const editingNews = newsId => ({
 export const getNewsTitle = requestedUser => dispatch =>
   api.dashboard.news
     .getTitle(requestedUser)
-    .then(res => dispatch(newsTitle(res.title)));
+    .then(res => dispatch(newsTitle(res.dashboardNews)));
 
 export const editingNewsState = newsId => dispatch => {
   dispatch(editingNews(newsId));
