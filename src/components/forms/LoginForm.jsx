@@ -33,7 +33,7 @@ class LoginForm extends React.Component {
         loading: true
       });
       this.props
-        .login(this.state.data).then(() => this.setState({ loading: false }))
+        .login(this.state.data)
         .catch(err => this.setState({ errors: err.response.data.errors, loading: false }));
     }
   };

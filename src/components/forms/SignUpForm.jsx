@@ -33,7 +33,7 @@ class SignUpForm extends React.Component {
     if (_.isEmpty(errors)) {
       this.setState({ loading: true })
       this.props
-        .signup(this.state.data).then(() => this.setState({ loading: false }))
+        .signup(this.state.data)
         .catch(err => this.setState({ errors: err.response.data.errors, loading: false }));
     }
   };
