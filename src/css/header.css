@@ -36,7 +36,7 @@
 
 .title-block::after {
   content: "";
-  background: url("https://sp.mycdn.me/getTheme?photoId=365&type=62&v=1")
+  background: url("../media/header.jpg")
     no-repeat;
   opacity: 0.8;
   top: 0;
