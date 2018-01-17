@@ -28,7 +28,7 @@ class AddNewsForm extends React.Component {
         data: {
           ...this.state.data,
           title: props.news[index].title,
-          text: props.news[index].text,
+          text: props.news[index].text.replace(/<[^>]+>/g, ''),
           newsId: props.isEditNews
         }
       });
@@ -109,8 +109,8 @@ class AddNewsForm extends React.Component {
         {this.props.isEditNews ? (
           <Button content="Отмена" onClick={this.onCancelEdit} />
         ) : (
-          ""
-        )}
+            ""
+          )}
       </Form>
     );
   }
