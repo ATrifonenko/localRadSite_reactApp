@@ -8,20 +8,22 @@ import "../css/addNewsForm.css";
 
 const UserPanel = props => (
   <div>
-    <h3>Привет {props.name}</h3>
-    <Button as={Link} to="/dashboard" content="Панель управления" />
+    <h3 className="username">Привет {props.name}</h3>
+    {props.privilege === "admin" ? <Button as={Link} to="/dashboard" content="Панель управления" /> : ""}
     <Button content="Выйти" onClick={props.logout} />
   </div>
 );
 
 function mapStateToPrors(state) {
   return {
-    name: state.user.name
+    name: state.user.name,
+    privilege: state.user.privilege
   };
 }
 
 UserPanel.propTypes = {
   logout: PropTypes.func.isRequired,
-  name: PropTypes.string.isRequired
+  name: PropTypes.string.isRequired,
+  privilege: PropTypes.string.isRequired
 };
 export default connect(mapStateToPrors, { logout })(UserPanel);
