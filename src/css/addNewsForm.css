@@ -76,3 +76,7 @@ button.change-form {
   font: inherit;
   cursor: pointer;
 }
+/* 
+input[type="file"] {
+ display: none
+} */

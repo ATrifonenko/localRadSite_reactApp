@@ -29,7 +29,7 @@ class DashboardPage extends React.Component {
       delete: true,
       newsId: this.state.newsId
     };
-    api.dashboard.news.editNews(data).then(res => this.props.newsTitle(res));
+    api.dashboard.news.deleteNews(data).then(res => this.props.newsTitle(res));
   };
 
   getNewsId = e => {

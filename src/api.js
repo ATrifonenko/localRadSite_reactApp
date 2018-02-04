@@ -21,7 +21,11 @@ export default {
     news: {
       editNews: data =>
         axios
-          .post("/api/news/editNews.php", JSON.stringify(data))
+          .post("/api/news/editNews.php", data, { headers: { 'Content-Type': 'multipart/form-data' } })
+          .then(res => res.data),
+      deleteNews: data =>
+        axios
+          .post("/api/news/editNews.php", data)
           .then(res => res.data),
       getTitle: () => axios.post("/api/news/getTitle.php").then(res => res.data)
     }
