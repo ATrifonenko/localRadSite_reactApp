@@ -2,7 +2,7 @@ import React from "react";
 import _ from "lodash";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Form, Button } from "semantic-ui-react";
+import { Form, Button, List } from "semantic-ui-react";
 import InlineError from "../messages/InlineError";
 import "../../css/addNewsForm.css";
 import { editingNewsState } from "../../actions/dashboard";
@@ -13,7 +13,8 @@ class AddNewsForm extends React.Component {
       title: "",
       text: "",
       newsId: "",
-      file: []
+      files: [],
+      delFiles: []
     },
     loading: false,
     errors: {}
@@ -29,7 +30,8 @@ class AddNewsForm extends React.Component {
           ...this.state.data,
           title: props.news[index].title,
           text: props.news[index].text.replace(/<[^>]+>/g, ''),
-          newsId: props.isEditNews
+          newsId: props.isEditNews,
+          files: props.news[index].files
         }
       });
     } else {
@@ -37,7 +39,9 @@ class AddNewsForm extends React.Component {
         data: {
           title: "",
           text: "",
-          newsId: ""
+          newsId: "",
+          files: [],
+          delFiles: []
         }
       });
     }
@@ -49,36 +53,45 @@ class AddNewsForm extends React.Component {
     });
 
   onSelectFile = e => {
-    const files = [];
-    for (let x = 0; x < e.target.files.length; x += 1) {
-      files.push(e.target.files[x]);
-      console.log(files);
-    }
-
+    const files = this.state.data.files.slice();
+    files.push(e.target.files[0]);
     this.setState({
-      data: { ...this.state.data, file: files }
+      data: { ...this.state.data, files }
+    });
+    e.target.value = "";
+  }
+
+  onDeleteFile = e => {
+    const index = e.target.closest("div[index]").getAttribute("index");
+    const delFiles = this.state.data.delFiles.slice();;
+    const files = this.state.data.files.slice();
+    delFiles.push(files[index].id);
+    files.splice(index, 1)
+    this.setState({
+      data: { ...this.state.data, files, delFiles }
     });
   }
+
   onSubmit = e => {
     e.preventDefault();
     const errors = this.validate(this.state.data);
     this.setState({ errors });
     if (_.isEmpty(errors)) {
       const formData = new FormData();
-      const data = this.state.data;
+      const { data } = this.state;
       for (const key in data) {
         if ({}.hasOwnProperty.call(data, key)) {
-          if (key === 'file') {
+          if (key === 'files') {
             for (let x = 0; x < data[key].length; x += 1) {
               formData.append('file[]', data[key][x]);
-              console.log(formData);
+            }
+          } else if (key === 'delFiles') {
+            for (let x = 0; x < data[key].length; x += 1) {
+              formData.append('delFile[]', data[key][x]);
             }
           } else formData.append(key, data[key]);
         }
-      };
-      // for (const pair of formData.entries()) {
-      //   console.log(pair[0] + ', ' + pair[1]);
-      // }
+      }
 
       this.setState({
         loading: true
@@ -87,7 +100,7 @@ class AddNewsForm extends React.Component {
         .submit(formData)
         .then(() => {
           this.setState({
-            data: { ...this.state.data, title: "", text: "", newsId: "" },
+            data: { ...this.state.data, title: "", text: "", newsId: "", files: [], delFile: [] },
             loading: false
           });
           this.props.editingNewsState("");
@@ -111,6 +124,23 @@ class AddNewsForm extends React.Component {
   render() {
     const { data, errors, loading } = this.state;
 
+    const fileList = this.state.data.files.map((file, index) => (
+
+      <List.Item key={file.id || index} index={index}>
+        <List.Content floated="right" verticalAlign="middle">
+          <Button
+            compact
+            negative
+            circular
+            icon="delete"
+            title="Удалить"
+            onClick={this.onDeleteFile}
+          />
+        </List.Content>
+        <List.Content>{file.name}</List.Content>
+      </List.Item>
+    ));
+
     return (
       <Form onSubmit={this.onSubmit} loading={loading}>
         <Form.Field error={!!errors.title}>
@@ -129,11 +159,14 @@ class AddNewsForm extends React.Component {
           value={data.text}
           onChange={this.onChange}
         />
-        <Form.Field>
-          <input multiple type="file" onChange={this.onSelectFile} />
-        </Form.Field>
+        <label>Файлы:</label>
+        <List divided>{fileList}</List>
+        <Form.Button className="addFile">
+          Прикрепить файл
+          <input type="file" onChange={this.onSelectFile} />
+        </Form.Button>
         <Button primary>
-          {this.props.isEditNews ? "Редактировать" : "Добавить"}
+          {this.props.isEditNews ? "Редактировать" : "Опубликовать"}
         </Button>
         {this.props.isEditNews ? (
           <Button content="Отмена" onClick={this.onCancelEdit} />
