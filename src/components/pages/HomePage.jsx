@@ -21,7 +21,7 @@ class HomePage extends React.Component {
   render() {
     return (
       <div className="main-wrapper">
-        {<NewsList news={this.state.news} />}
+        <NewsList news={this.state.news} />
         <SideBar />
       </div>
     );

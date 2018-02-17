@@ -1,6 +1,7 @@
 .news-list {
   display: flex;
   flex-direction: column;
+  margin: 50px 10px 10px 10px;
 }
 
 .news-item {
@@ -33,4 +34,12 @@ h1.title-news {
   margin: 0;
   margin-bottom: 10px;
   font-size: 16px;
+}
+
+.custom-card {
+  box-shadow: 0 1px 3px 0 #d3e6f5, 0 0 0 1px #d3e6f5 !important;
+}
+
+.custom-card .header {
+  color: #1e70bf!important;
 }

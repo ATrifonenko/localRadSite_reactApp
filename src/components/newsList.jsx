@@ -1,17 +1,45 @@
 import React from "react";
 import PropTypes from 'prop-types';
+import { Card, Icon, List } from "semantic-ui-react";
 import "../css/newsList.css";
 
 const NewsList = props => {
-  const item = props.news.map(newsItem => (
-    <div className="news-item" key={newsItem.id}>
-      <h1 className="title-news">{newsItem.title}</h1>
-      <p className="text-news" dangerouslySetInnerHTML={{ __html: newsItem.text }} />
-      <div className="info-news">
-        <p className="date-news">{newsItem.datetime}</p>
-        <p className="autor-news">{newsItem.author}</p>
-      </div>
-    </div>
+
+  const files = (index) =>
+    props.news[index].files.map(file => (
+      <List.Item key={file.id}>
+        <List.Icon name='download' verticalAlign='middle' />
+        <List.Content>
+          <List.Header as='a' href={`/uploads/${file.path}`} download>{file.name}</List.Header>
+        </List.Content>
+      </List.Item>
+    ));
+
+  const item = props.news.map((newsItem, index) => (
+    <Card fluid className="custom-card" key={newsItem.id}>
+      <Card.Content>
+        <Card.Header className="">
+          {newsItem.title}
+        </Card.Header>
+      </Card.Content>
+      <Card.Content >
+        <Card.Description>
+          <p dangerouslySetInnerHTML={{ __html: newsItem.text }} />
+        </Card.Description>
+      </Card.Content>
+      <Card.Content>
+        <List>
+          {files(index)}
+        </List>
+      </Card.Content>
+      <Card.Content extra>
+        <Icon name='clock' />
+        {newsItem.datetime}
+        <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <Icon name='user' />
+        {newsItem.author}
+      </Card.Content>
+    </Card>
   ));
 
   return <div className="news-list">{item}</div>;
