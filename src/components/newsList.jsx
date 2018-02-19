@@ -27,7 +27,7 @@ const NewsList = props => {
           <p dangerouslySetInnerHTML={{ __html: newsItem.text }} />
         </Card.Description>
       </Card.Content>
-      <Card.Content>
+      <Card.Content className={(newsItem.files.length > 0) ? "" : "hidden"}>
         <List>
           {files(index)}
         </List>

@@ -43,3 +43,7 @@ h1.title-news {
 .custom-card .header {
   color: #1e70bf!important;
 }
+
+.custom-card .hidden {
+  display: none;
+}
