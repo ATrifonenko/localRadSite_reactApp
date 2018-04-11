@@ -37,7 +37,7 @@ h1.title-news {
 }
 
 .custom-card {
-  box-shadow: 0 1px 3px 0 #d3e6f5, 0 0 0 1px #d3e6f5 !important;
+  box-shadow: none!important;
 }
 
 .custom-card .header {

@@ -29,5 +29,8 @@ export default {
           .then(res => res.data),
       getTitle: () => axios.post("/api/news/getTitle.php").then(res => res.data)
     }
+  },
+  phonebook: {
+    getAll: () => axios.get("/api/phonebook/getPhoneBook.php").then(res => res.data),
   }
 };
