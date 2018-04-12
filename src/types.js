@@ -6,3 +6,5 @@ export const CHANGE_FORM = "CHANGE_FORM";
 
 export const GET_NEWS_TITLE = "GET_NEWS_TITLE";
 export const IS_EDIT_NEWS = "IS_EDIT_NEWS";
+
+export const RECEIVED_PHONEBOOK = "RECEIVED_PHONEBOOK";

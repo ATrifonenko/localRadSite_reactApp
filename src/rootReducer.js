@@ -2,11 +2,13 @@ import { combineReducers } from "redux";
 import user from "./reducers/user";
 import sidebar from "./reducers/sidebar";
 import dashboard from "./reducers/dashboard";
+import phonebook from "./reducers/phonebook";
 
 const appReducer = combineReducers({
   user,
   sidebar,
-  dashboard
+  dashboard,
+  phonebook
 });
 
 const rootReducer = (state, action) => {

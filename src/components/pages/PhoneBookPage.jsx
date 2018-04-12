@@ -1,11 +1,12 @@
 import React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import _ from 'lodash';
 import { Table, Search } from "semantic-ui-react";
-import api from "../../api";
+import { getPhonebook } from "../../actions/phonebook";
 
 class PhoneBookPage extends React.Component {
   state = {
-    phonebook: [],
     isLoading: false,
     results: [],
     value: ''
@@ -16,13 +17,8 @@ class PhoneBookPage extends React.Component {
   }
 
   componentDidMount() {
-    this.getPhoneBook();
+    this.props.getPhonebook();
   }
-
-  getPhoneBook = () =>
-    api.phonebook.getAll().then(res => {
-      this.setState({ phonebook: res.phonebook });
-    });
 
   handleSearchChange = (e, { value }) => {
     this.setState({ isLoading: true, value });
@@ -35,7 +31,7 @@ class PhoneBookPage extends React.Component {
 
       this.setState({
         isLoading: false,
-        results: _.filter(this.state.phonebook, isMatch),
+        results: _.filter(this.props.phonebook, isMatch),
       });
     }, 300);
   }
@@ -50,7 +46,7 @@ class PhoneBookPage extends React.Component {
   render() {
     const { isLoading, value, results } = this.state;
     let tempSubdivision = '';
-    let phonebookArray = this.state.phonebook;
+    let phonebookArray = this.props.phonebook;
     const resultRenderer = ({ fio }) => <p>{fio}</p>;
 
     if (this.state.results.length > 0) phonebookArray = this.state.results;
@@ -120,4 +116,15 @@ class PhoneBookPage extends React.Component {
   }
 }
 
-export default PhoneBookPage;
+function mapStateToProps(state) {
+  return {
+    phonebook: state.phonebook.phonebook
+  };
+}
+
+PhoneBookPage.propTypes = {
+  phonebook: PropTypes.arrayOf(PropTypes.object).isRequired,
+  getPhonebook: PropTypes.func.isRequired
+};
+
+export default connect(mapStateToProps, { getPhonebook })(PhoneBookPage);
