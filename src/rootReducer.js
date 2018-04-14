@@ -3,12 +3,14 @@ import user from "./reducers/user";
 import sidebar from "./reducers/sidebar";
 import dashboard from "./reducers/dashboard";
 import phonebook from "./reducers/phonebook";
+import news from './reducers/news';
 
 const appReducer = combineReducers({
   user,
   sidebar,
   dashboard,
-  phonebook
+  phonebook,
+  news
 });
 
 const rootReducer = (state, action) => {

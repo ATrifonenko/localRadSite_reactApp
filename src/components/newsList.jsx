@@ -1,10 +1,12 @@
 import React from "react";
 import PropTypes from 'prop-types';
+import _ from 'lodash';
+import { connect } from "react-redux";
 import { Card, Icon, List } from "semantic-ui-react";
 import "../css/newsList.css";
 
 const NewsList = props => {
-
+  
   const files = (index) =>
     props.news[index].files.map(file => (
       <List.Item key={file.id}>
@@ -42,11 +44,17 @@ const NewsList = props => {
     </Card>
   ));
 
-  return <div className="news-list">{item}</div>;
+  return <div className="news-list">{(_.isEmpty(props.news)) ? null : item}</div>;
 };
 
 NewsList.propTypes = {
   news: PropTypes.arrayOf(PropTypes.object).isRequired
 };
 
-export default NewsList;
+function mapStateToProps(state) {
+  return {
+    news: state.news.news
+  };
+}
+
+export default connect(mapStateToProps)(NewsList);
