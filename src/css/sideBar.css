@@ -1,6 +1,7 @@
 .sidebar {
   min-width: 380px;
   margin: 50px 25px 25px 25px;
+  padding-top: 10px;
 }
 
 .username {

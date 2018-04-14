@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import _ from 'lodash';
 import { Table, Search } from "semantic-ui-react";
 import { getPhonebook } from "../../actions/phonebook";
+import '../../css/phoneBook.css';
 
 class PhoneBookPage extends React.Component {
   state = {
