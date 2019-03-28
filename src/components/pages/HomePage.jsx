@@ -7,13 +7,11 @@ import api from "../../api";
 import allNews from "../../actions/news";
 
 class HomePage extends React.Component {
-
   componentWillMount() {
     this.getMain();
   }
 
-  getMain = () =>
-    api.main.getMain().then(res => this.props.allNews(res.news));
+  getMain = () => api.main.getMain().then(res => this.props.allNews(res.news));
 
   render() {
     return (
@@ -29,4 +27,7 @@ HomePage.propTypes = {
   allNews: PropTypes.func.isRequired
 };
 
-export default connect(null, { allNews })(HomePage);
+export default connect(
+  null,
+  { allNews }
+)(HomePage);

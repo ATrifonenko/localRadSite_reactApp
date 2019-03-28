@@ -10,14 +10,23 @@ import { newsTitle, editingNewsState } from "../../actions/dashboard";
 class DashboardPage extends React.Component {
   state = {
     newsId: ""
-  }
+  };
 
   componentDidMount() {
     api.dashboard.news.getTitle().then(res => this.props.newsTitle(res));
   }
 
-  onSubmit = data =>
-    api.dashboard.news.editNews(data).then(res => this.props.newsTitle(res));
+  onSubmit = async data => {
+    if (this.props.isEditNews) {
+      await api.dashboard.news
+        .editNews(data)
+        .then(res => this.props.newsTitle(res));
+    } else {
+      await api.dashboard.news
+        .addNews(data)
+        .then(res => this.props.newsTitle(res));
+    }
+  };
 
   onEditNewsStart = e => {
     const newsId = e.target.closest("div[news_id]").getAttribute("news_id");
@@ -63,9 +72,16 @@ class DashboardPage extends React.Component {
                 onClick={this.getNewsId}
               />
             }
-            content={<Button color='red' content='Подтвердить удаление!' title="Уверены?" onClick={this.onDeleteNews} />}
-            on='click'
-            position='top center'
+            content={
+              <Button
+                color="red"
+                content="Подтвердить удаление!"
+                title="Уверены?"
+                onClick={this.onDeleteNews}
+              />
+            }
+            on="click"
+            position="top center"
           />
         </List.Content>
         <List.Content>{news.title}</List.Content>
@@ -104,6 +120,7 @@ DashboardPage.propTypes = {
   editingNewsState: PropTypes.func.isRequired
 };
 
-export default connect(mapStateToProps, { newsTitle, editingNewsState })(
-  DashboardPage
-);
+export default connect(
+  mapStateToProps,
+  { newsTitle, editingNewsState }
+)(DashboardPage);

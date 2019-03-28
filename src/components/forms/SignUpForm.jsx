@@ -31,10 +31,12 @@ class SignUpForm extends React.Component {
     const errors = this.validate(this.state.data);
     this.setState({ errors });
     if (_.isEmpty(errors)) {
-      this.setState({ loading: true })
+      this.setState({ loading: true });
       this.props
         .signup(this.state.data)
-        .catch(err => this.setState({ errors: err.response.data.errors, loading: false }));
+        .catch(err =>
+          this.setState({ errors: err.response.data.errors, loading: false })
+        );
     }
   };
 
