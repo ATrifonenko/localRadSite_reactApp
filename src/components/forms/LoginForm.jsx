@@ -18,23 +18,26 @@ class LoginForm extends React.Component {
     loading: false
   };
 
-  onChange = e =>
-    this.setState({
-      data: { ...this.state.data, [e.target.name]: e.target.value }
-    });
+  onChange = e => {
+    e.persist();
+    this.setState(prevState => ({
+      data: { ...prevState.data, [e.target.name]: e.target.value }
+    }));
+  };
 
   onSubmit = e => {
     e.preventDefault();
-
-    const errors = this.validate(this.state.data);
+    const { data } = this.state;
+    const { loginConnect } = this.props;
+    const errors = this.validate(data);
     this.setState({ errors });
     if (_.isEmpty(errors)) {
       this.setState({
         loading: true
       });
-      this.props
-        .login(this.state.data)
-        .catch(err => this.setState({ errors: err.response.data.errors, loading: false }));
+      loginConnect(data).catch(err =>
+        this.setState({ errors: err.response.data.errors, loading: false })
+      );
     }
   };
 
@@ -47,6 +50,7 @@ class LoginForm extends React.Component {
 
   render() {
     const { data, errors, loading } = this.state;
+    const { changeFormConnect } = this.props;
 
     return (
       <Form onSubmit={this.onSubmit} loading={loading}>
@@ -74,7 +78,11 @@ class LoginForm extends React.Component {
         <Button primary>Войти</Button>
         <span className="change-form">
           или{" "}
-          <button className="change-form" onClick={this.props.changeForm}>
+          <button
+            type="button"
+            className="change-form"
+            onClick={changeFormConnect}
+          >
             Зарегистрироваться
           </button>
         </span>
@@ -84,8 +92,11 @@ class LoginForm extends React.Component {
 }
 
 LoginForm.propTypes = {
-  login: PropTypes.func.isRequired,
-  changeForm: PropTypes.func.isRequired
+  loginConnect: PropTypes.func.isRequired,
+  changeFormConnect: PropTypes.func.isRequired
 };
 
-export default connect(null, { login, changeForm })(LoginForm);
+export default connect(
+  null,
+  { loginConnect: login, changeFormConnect: changeForm }
+)(LoginForm);

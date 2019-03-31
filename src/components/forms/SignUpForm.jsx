@@ -20,23 +20,24 @@ class SignUpForm extends React.Component {
     loading: false
   };
 
-  onChange = e =>
-    this.setState({
-      data: { ...this.state.data, [e.target.name]: e.target.value }
-    });
+  onChange = e => {
+    e.persist();
+    this.setState(prevState => ({
+      data: { ...prevState.data, [e.target.name]: e.target.value }
+    }));
+  };
 
   onSubmit = e => {
     e.preventDefault();
-
-    const errors = this.validate(this.state.data);
+    const { data } = this.state;
+    const { signupConnect } = this.props;
+    const errors = this.validate(data);
     this.setState({ errors });
     if (_.isEmpty(errors)) {
       this.setState({ loading: true });
-      this.props
-        .signup(this.state.data)
-        .catch(err =>
-          this.setState({ errors: err.response.data.errors, loading: false })
-        );
+      signupConnect(data).catch(err =>
+        this.setState({ errors: err.response.data.errors, loading: false })
+      );
     }
   };
 
@@ -65,6 +66,7 @@ class SignUpForm extends React.Component {
 
   render() {
     const { data, errors, loading } = this.state;
+    const { changeFormConnect } = this.props;
 
     return (
       <Form onSubmit={this.onSubmit} loading={loading}>
@@ -112,7 +114,11 @@ class SignUpForm extends React.Component {
         <Button primary>Зарегистрироваться</Button>
         <span className="change-form">
           или{" "}
-          <button className="change-form" onClick={this.props.changeForm}>
+          <button
+            type="button"
+            className="change-form"
+            onClick={changeFormConnect}
+          >
             Войти
           </button>
         </span>
@@ -122,8 +128,11 @@ class SignUpForm extends React.Component {
 }
 
 SignUpForm.propTypes = {
-  signup: PropTypes.func.isRequired,
-  changeForm: PropTypes.func.isRequired
+  signupConnect: PropTypes.func.isRequired,
+  changeFormConnect: PropTypes.func.isRequired
 };
 
-export default connect(null, { signup, changeForm })(SignUpForm);
+export default connect(
+  null,
+  { signupConnect: signup, changeFormConnect: changeForm }
+)(SignUpForm);

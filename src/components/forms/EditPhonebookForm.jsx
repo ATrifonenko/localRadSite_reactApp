@@ -7,25 +7,25 @@ import InlineError from "../messages/InlineError";
 
 class EditPhonebookForm extends React.Component {
   state = {
-    data: {
-
-    },
+    data: {},
     errors: {},
     loading: false
   };
 
-  onChange = e =>
-    this.setState({
-      data: { ...this.state.data, [e.target.name]: e.target.value }
-    });
+  onChange = e => {
+    e.persist();
+    this.setState(prevState => ({
+      data: { ...prevState.data, [e.target.name]: e.target.value }
+    }));
+  };
 
   onSubmit = e => {
     e.preventDefault();
-
-    const errors = this.validate(this.state.data);
+    const { data } = this.state;
+    const errors = this.validate(data);
     this.setState({ errors });
     if (_.isEmpty(errors)) {
-      this.setState({ loading: true })
+      this.setState({ loading: true });
       // this.props
       //   .signup(this.state.data)
       //   .catch(err => this.setState({ errors: err.response.data.errors, loading: false }));
@@ -134,4 +134,7 @@ class EditPhonebookForm extends React.Component {
 
 // };
 
-export default connect(null, {})(EditPhonebookForm);
+export default connect(
+  null,
+  {}
+)(EditPhonebookForm);

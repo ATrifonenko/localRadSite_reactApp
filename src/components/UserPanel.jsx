@@ -6,11 +6,15 @@ import { Button } from "semantic-ui-react";
 import { logout } from "../actions/auth";
 import "../css/addNewsForm.css";
 
-const UserPanel = props => (
+const UserPanel = ({ name, privilege, logoutConnect }) => (
   <div>
-    <h3 className="username">Привет {props.name}</h3>
-    {props.privilege === "admin" ? <Button as={Link} to="/dashboard" content="Панель управления" /> : ""}
-    <Button content="Выйти" onClick={props.logout} />
+    <h3 className="username">Привет {name}</h3>
+    {privilege === "admin" ? (
+      <Button as={Link} to="/dashboard" content="Панель управления" />
+    ) : (
+      ""
+    )}
+    <Button content="Выйти" onClick={logoutConnect} />
   </div>
 );
 
@@ -22,8 +26,11 @@ function mapStateToPrors(state) {
 }
 
 UserPanel.propTypes = {
-  logout: PropTypes.func.isRequired,
+  logoutConnect: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
   privilege: PropTypes.string.isRequired
 };
-export default connect(mapStateToPrors, { logout })(UserPanel);
+export default connect(
+  mapStateToPrors,
+  { logoutConnect: logout }
+)(UserPanel);

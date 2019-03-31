@@ -5,9 +5,9 @@ import { connect } from "react-redux";
 import { Card, Icon, List } from "semantic-ui-react";
 import "../css/newsList.css";
 
-const NewsList = props => {
+const NewsList = ({ news }) => {
   const files = index =>
-    props.news[index].files.map(file => (
+    news[index].files.map(file => (
       <List.Item key={file.id}>
         <List.Icon name="download" verticalAlign="middle" />
         <List.Content>
@@ -18,7 +18,7 @@ const NewsList = props => {
       </List.Item>
     ));
 
-  const item = props.news.map((newsItem, index) => (
+  const item = news.map((newsItem, index) => (
     <Card fluid className="custom-card" key={newsItem.id}>
       <Card.Content>
         <Card.Header className="">{newsItem.title}</Card.Header>
@@ -41,7 +41,7 @@ const NewsList = props => {
     </Card>
   ));
 
-  return <div className="news-list">{_.isEmpty(props.news) ? null : item}</div>;
+  return <div className="news-list">{_.isEmpty(news) ? null : item}</div>;
 };
 
 NewsList.propTypes = {

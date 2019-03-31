@@ -13,32 +13,39 @@ class DashboardPage extends React.Component {
   };
 
   componentDidMount() {
-    api.dashboard.news.getTitle().then(res => this.props.newsTitle(res));
+    api.dashboard.news.getTitle().then(res => {
+      const { newsTitleConnect } = this.props;
+      newsTitleConnect(res);
+    });
   }
 
   onSubmit = async data => {
-    if (this.props.isEditNews) {
+    const { isEditNews, newsTitleConnect } = this.props;
+    if (isEditNews) {
       await api.dashboard.news
         .editNews(data)
-        .then(res => this.props.newsTitle(res));
+        .then(res => newsTitleConnect(res));
     } else {
-      await api.dashboard.news
-        .addNews(data)
-        .then(res => this.props.newsTitle(res));
+      await api.dashboard.news.addNews(data).then(res => newsTitleConnect(res));
     }
   };
 
   onEditNewsStart = e => {
     const newsId = e.target.closest("div[news_id]").getAttribute("news_id");
-    this.props.editingNewsState(newsId);
+    const { editingNewsStateConnect } = this.props;
+    editingNewsStateConnect(newsId);
   };
 
   onDeleteNews = () => {
+    const { newsId } = this.state;
     const data = {
       delete: true,
-      newsId: this.state.newsId
+      newsId
     };
-    api.dashboard.news.deleteNews(data).then(res => this.props.newsTitle(res));
+    api.dashboard.news.deleteNews(data).then(res => {
+      const { newsTitleConnect } = this.props;
+      newsTitleConnect(res);
+    });
   };
 
   getNewsId = e => {
@@ -48,11 +55,12 @@ class DashboardPage extends React.Component {
   };
 
   render() {
-    const listTitle = this.props.news.map(news => (
+    const { news: newsProps, isEditNews } = this.props;
+    const listTitle = newsProps.map(news => (
       <List.Item key={news.id} news_id={news.id}>
         <List.Content floated="right" verticalAlign="middle">
           <Button
-            disabled={!!this.props.isEditNews}
+            disabled={!!isEditNews}
             compact
             circular
             icon="edit"
@@ -63,7 +71,7 @@ class DashboardPage extends React.Component {
           <Popup
             trigger={
               <Button
-                disabled={!!this.props.isEditNews}
+                disabled={!!isEditNews}
                 compact
                 negative
                 circular
@@ -114,13 +122,13 @@ function mapStateToProps(state) {
 }
 
 DashboardPage.propTypes = {
-  newsTitle: PropTypes.func.isRequired,
+  newsTitleConnect: PropTypes.func.isRequired,
   news: PropTypes.arrayOf(PropTypes.object).isRequired,
   isEditNews: PropTypes.string.isRequired,
-  editingNewsState: PropTypes.func.isRequired
+  editingNewsStateConnect: PropTypes.func.isRequired
 };
 
 export default connect(
   mapStateToProps,
-  { newsTitle, editingNewsState }
+  { newsTitleConnect: newsTitle, editingNewsStateConnect: editingNewsState }
 )(DashboardPage);

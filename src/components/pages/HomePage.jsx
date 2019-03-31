@@ -11,7 +11,11 @@ class HomePage extends React.Component {
     this.getMain();
   }
 
-  getMain = () => api.main.getMain().then(res => this.props.allNews(res.news));
+  getMain = () =>
+    api.main.getMain().then(res => {
+      const { allNewsConnect } = this.props;
+      allNewsConnect(res.news);
+    });
 
   render() {
     return (
@@ -24,10 +28,10 @@ class HomePage extends React.Component {
 }
 
 HomePage.propTypes = {
-  allNews: PropTypes.func.isRequired
+  allNewsConnect: PropTypes.func.isRequired
 };
 
 export default connect(
   null,
-  { allNews }
+  { allNewsConnect: allNews }
 )(HomePage);

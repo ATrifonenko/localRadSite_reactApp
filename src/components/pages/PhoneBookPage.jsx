@@ -18,19 +18,22 @@ class PhoneBookPage extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getPhonebook();
+    const { getPhonebookConnect } = this.props;
+    getPhonebookConnect();
   }
 
-  handleSearchChange = (e, { value }) => {
-    this.setState({ isLoading: true, value });
+  handleSearchChange = (e, { currentValue }) => {
+    const { value } = this.state;
+    const { phonebook } = this.props;
+    this.setState({ isLoading: true, value: currentValue });
 
     setTimeout(() => {
-      if (this.state.value.length < 1) {
+      if (value.length < 1) {
         this.resetComponent();
         return;
       }
 
-      const re = new RegExp(_.escapeRegExp(this.state.value), "i");
+      const re = new RegExp(_.escapeRegExp(value), "i");
       const isMatch = result =>
         re.test(result.fullName) ||
         re.test(result.line) ||
@@ -39,7 +42,7 @@ class PhoneBookPage extends React.Component {
 
       this.setState({
         isLoading: false,
-        results: _.filter(this.props.phonebook, isMatch)
+        results: _.filter(phonebook, isMatch)
       });
     }, 300);
   };
@@ -54,20 +57,19 @@ class PhoneBookPage extends React.Component {
 
   render() {
     const { isLoading, value, results } = this.state;
+    const { phonebook } = this.props;
     let tempSubdivision = "";
-    let phonebookArray = this.props.phonebook;
+    let phonebookArray = phonebook;
     const resultRenderer = ({ fullName }) => <p>{fullName}</p>;
 
-    if (this.state.results.length > 0) phonebookArray = this.state.results;
+    if (results.length > 0) phonebookArray = results;
 
-    const phonebook = phonebookArray.map(row => {
+    const phonebookBody = phonebookArray.map(row => {
       if (row.unit.subdivision !== tempSubdivision) {
         tempSubdivision = row.unit.subdivision;
         return (
           <Table.Row key={row.id}>
-            <Table.Cell
-              rowSpan={this.state.results.length > 0 ? 1 : row.unit.count_sub}
-            >
+            <Table.Cell rowSpan={results.length > 0 ? 1 : row.unit.count_sub}>
               {row.unit.subdivision}
             </Table.Cell>
             <Table.Cell>{row.fullName}</Table.Cell>
@@ -82,7 +84,7 @@ class PhoneBookPage extends React.Component {
 
       return (
         <Table.Row key={row.id}>
-          {this.state.results.length > 0 ? (
+          {results.length > 0 ? (
             <Table.Cell>{row.unit.subdivision}</Table.Cell>
           ) : null}
           <Table.Cell>{row.fullName}</Table.Cell>
@@ -126,7 +128,7 @@ class PhoneBookPage extends React.Component {
               <Table.HeaderCell>Сотовый</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
-          <Table.Body>{phonebook}</Table.Body>
+          <Table.Body>{phonebookBody}</Table.Body>
         </Table>
       </div>
     );
@@ -141,7 +143,10 @@ function mapStateToProps(state) {
 
 PhoneBookPage.propTypes = {
   phonebook: PropTypes.arrayOf(PropTypes.object).isRequired,
-  getPhonebook: PropTypes.func.isRequired
+  getPhonebookConnect: PropTypes.func.isRequired
 };
 
-export default connect(mapStateToProps, { getPhonebook })(PhoneBookPage);
+export default connect(
+  mapStateToProps,
+  { getPhonebookConnect: getPhonebook }
+)(PhoneBookPage);

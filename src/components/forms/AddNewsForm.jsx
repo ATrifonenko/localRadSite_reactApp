@@ -23,17 +23,18 @@ class AddNewsForm extends React.Component {
   componentWillReceiveProps(props) {
     if (props.isEditNews) {
       const index = props.news.findIndex(
+        // eslint-disable-next-line eqeqeq
         element => element.id == props.isEditNews
       );
-      this.setState({
+      this.setState(prevState => ({
         data: {
-          ...this.state.data,
+          ...prevState.data,
           title: props.news[index].title,
           text: props.news[index].text.replace(/<[^>]+>/g, ""),
           newsId: props.isEditNews,
           files: props.news[index].files
         }
-      });
+      }));
     } else {
       this.setState({
         data: {
@@ -47,39 +48,44 @@ class AddNewsForm extends React.Component {
     }
   }
 
-  onChange = e =>
-    this.setState({
-      data: { ...this.state.data, [e.target.name]: e.target.value }
-    });
+  onChange = e => {
+    e.persist();
+    this.setState(prevState => ({
+      data: { ...prevState.data, [e.target.name]: e.target.value }
+    }));
+  };
 
   onSelectFile = e => {
-    const files = this.state.data.files.slice();
+    const { data } = this.state;
+    const files = data.files.slice();
     files.push(e.target.files[0]);
-    this.setState({
-      data: { ...this.state.data, files }
-    });
+    this.setState(prevState => ({
+      data: { ...prevState.data, files }
+    }));
     e.target.value = "";
   };
 
   onDeleteFile = e => {
+    const { data } = this.state;
     const index = e.target.closest("div[index]").getAttribute("index");
-    const delFiles = this.state.data.delFiles.slice();
-    const files = this.state.data.files.slice();
+    const delFiles = data.delFiles.slice();
+    const files = data.files.slice();
     delFiles.push(files[index].id);
     files.splice(index, 1);
-    this.setState({
-      data: { ...this.state.data, files, delFiles }
-    });
+    this.setState(prevState => ({
+      data: { ...prevState.data, files, delFiles }
+    }));
   };
 
   onSubmit = e => {
     e.preventDefault();
-    const errors = this.validate(this.state.data);
+    const { data } = this.state;
+    const { submit, editingNewsStateConnect } = this.props;
+    const errors = this.validate(data);
     this.setState({ errors });
     if (_.isEmpty(errors)) {
       const formData = new FormData();
-      const { data } = this.state;
-      for (const key in data) {
+      Object.keys(data).forEach(key => {
         if ({}.hasOwnProperty.call(data, key)) {
           if (key === "files") {
             for (let x = 0; x < data[key].length; x += 1) {
@@ -91,17 +97,16 @@ class AddNewsForm extends React.Component {
             }
           } else formData.append(key, data[key]);
         }
-      }
+      });
 
       this.setState({
         loading: true
       });
-      this.props
-        .submit(formData)
+      submit(formData)
         .then(() => {
-          this.setState({
+          this.setState(prevState => ({
             data: {
-              ...this.state.data,
+              ...prevState.data,
               title: "",
               text: "",
               newsId: "",
@@ -109,8 +114,8 @@ class AddNewsForm extends React.Component {
               delFile: []
             },
             loading: false
-          });
-          this.props.editingNewsState("");
+          }));
+          editingNewsStateConnect("");
         })
         .catch(err =>
           this.setState({ errors: err.response.data.errors, loading: false })
@@ -119,7 +124,8 @@ class AddNewsForm extends React.Component {
   };
 
   onCancelEdit = () => {
-    this.props.editingNewsState("");
+    const { editingNewsStateConnect } = this.props;
+    editingNewsStateConnect("");
   };
 
   validate = data => {
@@ -130,8 +136,9 @@ class AddNewsForm extends React.Component {
 
   render() {
     const { data, errors, loading } = this.state;
+    const { isEditNews } = this.props;
 
-    const fileList = this.state.data.files.map((file, index) => (
+    const fileList = data.files.map((file, index) => (
       <List.Item key={file.id || index} index={index}>
         <List.Content floated="right" verticalAlign="middle">
           <Button
@@ -171,10 +178,8 @@ class AddNewsForm extends React.Component {
           Прикрепить файл
           <input type="file" onChange={this.onSelectFile} />
         </Form.Button>
-        <Button primary>
-          {this.props.isEditNews ? "Редактировать" : "Опубликовать"}
-        </Button>
-        {this.props.isEditNews ? (
+        <Button primary>{isEditNews ? "Редактировать" : "Опубликовать"}</Button>
+        {isEditNews ? (
           <Button content="Отмена" onClick={this.onCancelEdit} />
         ) : (
           ""
@@ -195,10 +200,10 @@ AddNewsForm.propTypes = {
   submit: PropTypes.func.isRequired,
   news: PropTypes.arrayOf(PropTypes.object).isRequired,
   isEditNews: PropTypes.string.isRequired,
-  editingNewsState: PropTypes.func.isRequired
+  editingNewsStateConnect: PropTypes.func.isRequired
 };
 
 export default connect(
   mapStateToProps,
-  { editingNewsState }
+  { editingNewsStateConnect: editingNewsState }
 )(AddNewsForm);
