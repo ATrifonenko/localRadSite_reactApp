@@ -55,6 +55,18 @@ class PhoneBookPage extends React.Component {
     this.handleSearchChange(e, { value: result.fullName });
   };
 
+  concatNumbers = (currentNumbers, addNumber, addNote) => {
+    let newNumbers = "";
+    let note = "";
+    if (addNote) {
+      note = ` (${addNote})`;
+    }
+    if (currentNumbers.length) {
+      newNumbers = `${currentNumbers}, ${addNumber}${note}`;
+    } else newNumbers = `${addNumber}${note}`;
+    return newNumbers;
+  };
+
   render() {
     const { isLoading, value, results } = this.state;
     const { phonebook } = this.props;
@@ -65,6 +77,25 @@ class PhoneBookPage extends React.Component {
     if (results.length > 0) phonebookArray = results;
 
     const phonebookBody = phonebookArray.map(row => {
+      let lineNumbers = "";
+      let ipNumbers = "";
+      let mobileNumbers = "";
+
+      row.phones.forEach(({ typePhone, number, note }) => {
+        switch (typePhone) {
+          case "line":
+            lineNumbers = this.concatNumbers(lineNumbers, number, note);
+            break;
+          case "IP":
+            ipNumbers = this.concatNumbers(ipNumbers, number, note);
+            break;
+          case "mob":
+            mobileNumbers = this.concatNumbers(mobileNumbers, number, note);
+            break;
+          default:
+            break;
+        }
+      });
       if (row.unit.subdivision !== tempSubdivision) {
         tempSubdivision = row.unit.subdivision;
         return (
@@ -74,9 +105,9 @@ class PhoneBookPage extends React.Component {
             </Table.Cell>
             <Table.Cell>{row.fullName}</Table.Cell>
             <Table.Cell>{row.position}</Table.Cell>
-            <Table.Cell>{row.line}</Table.Cell>
-            <Table.Cell>{row.ip}</Table.Cell>
-            <Table.Cell>{row.mobile}</Table.Cell>
+            <Table.Cell>{lineNumbers}</Table.Cell>
+            <Table.Cell>{ipNumbers}</Table.Cell>
+            <Table.Cell>{mobileNumbers}</Table.Cell>
             <Table.Cell>{row.room}</Table.Cell>
           </Table.Row>
         );
@@ -89,9 +120,9 @@ class PhoneBookPage extends React.Component {
           ) : null}
           <Table.Cell>{row.fullName}</Table.Cell>
           <Table.Cell>{row.position}</Table.Cell>
-          <Table.Cell>{row.line}</Table.Cell>
-          <Table.Cell>{row.ip}</Table.Cell>
-          <Table.Cell>{row.mobile}</Table.Cell>
+          <Table.Cell>{lineNumbers}</Table.Cell>
+          <Table.Cell>{ipNumbers}</Table.Cell>
+          <Table.Cell>{mobileNumbers}</Table.Cell>
           <Table.Cell>{row.room}</Table.Cell>
         </Table.Row>
       );
