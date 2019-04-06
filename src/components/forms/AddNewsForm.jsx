@@ -174,10 +174,10 @@ class AddNewsForm extends React.Component {
         />
         <label>Файлы:</label>
         <List divided>{fileList}</List>
-        <Form.Button className="addFile">
+        <Button as="div" className="addFile">
           Прикрепить файл
           <input type="file" onChange={this.onSelectFile} />
-        </Form.Button>
+        </Button>
         <Button primary>{isEditNews ? "Редактировать" : "Опубликовать"}</Button>
         {isEditNews ? (
           <Button content="Отмена" onClick={this.onCancelEdit} />
