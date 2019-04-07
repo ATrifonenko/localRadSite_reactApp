@@ -10,7 +10,7 @@ class PhoneBookPage extends React.Component {
   state = {
     isLoading: false,
     results: [],
-    value: ""
+    searchValue: ""
   };
 
   componentWillMount() {
@@ -22,10 +22,9 @@ class PhoneBookPage extends React.Component {
     getPhonebookConnect();
   }
 
-  handleSearchChange = (e, { currentValue }) => {
-    const { value } = this.state;
+  handleSearchChange = (e, { value }) => {
     const { phonebook } = this.props;
-    this.setState({ isLoading: true, value: currentValue });
+    this.setState({ isLoading: true, searchValue: value });
 
     setTimeout(() => {
       if (value.length < 1) {
@@ -36,9 +35,11 @@ class PhoneBookPage extends React.Component {
       const re = new RegExp(_.escapeRegExp(value), "i");
       const isMatch = result =>
         re.test(result.fullName) ||
-        re.test(result.line) ||
-        re.test(result.ip) ||
-        re.test(result.mobile);
+        result.phones
+          .map(row => {
+            return re.test(row.number);
+          })
+          .includes(true);
 
       this.setState({
         isLoading: false,
@@ -48,10 +49,10 @@ class PhoneBookPage extends React.Component {
   };
 
   resetComponent = () =>
-    this.setState({ isLoading: false, results: [], value: "" });
+    this.setState({ isLoading: false, results: [], searchValue: "" });
 
   handleResultSelect = (e, { result }) => {
-    this.setState({ value: result.fullName });
+    this.setState({ searchValue: result.fullName });
     this.handleSearchChange(e, { value: result.fullName });
   };
 
@@ -68,7 +69,7 @@ class PhoneBookPage extends React.Component {
   };
 
   render() {
-    const { isLoading, value, results } = this.state;
+    const { isLoading, searchValue, results } = this.state;
     const { phonebook } = this.props;
     let tempSubdivision = "";
     let phonebookArray = phonebook;
@@ -137,7 +138,7 @@ class PhoneBookPage extends React.Component {
             leading: true
           })}
           results={results}
-          value={value}
+          value={searchValue}
           resultRenderer={resultRenderer}
           noResultsMessage="Ничего не найдено"
           className="custom-search"
