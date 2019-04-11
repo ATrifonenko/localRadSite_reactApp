@@ -1,13 +1,56 @@
 import React from "react";
 // import PropTypes from "prop-types";
 import _ from "lodash";
-import { Form, Button } from "semantic-ui-react";
+import { Form } from "semantic-ui-react";
 import { connect } from "react-redux";
 import InlineError from "../messages/InlineError";
 
+const NumbersBlock = ({ numbers, options, onChangeNumber }) => {
+  return numbers.map((number, index) => (
+    <Form.Group key={number.number}>
+      <Input
+        label="Номер телефона"
+        placeholder="Номер телефона"
+        width={3}
+        name="number"
+        value={number.number}
+        onChange={e => onChangeNumber(e, index)}
+      />
+      <Form.Select
+        width={3}
+        label="Тип телефона"
+        name="typePhone"
+        // value={number.typePhone}
+        options={options}
+        // onChange={this.onChangeNumber(index)}
+      />
+      <Form.Checkbox
+        style={{ marginTop: "33px" }}
+        label="Факс"
+        // onChange={this.onChangeNumber(index)}
+      />
+      <Form.Button
+        style={{ marginTop: "27px", boxShadow: "none !important" }}
+        basic
+        size="mini"
+        color="red"
+      >
+        Удалить номер
+      </Form.Button>
+    </Form.Group>
+  ));
+};
+
 class EditPhonebookForm extends React.Component {
   state = {
-    data: {},
+    data: {
+      firstName: "",
+      lastName: "",
+      patronymic: "",
+      position: "",
+      subdivision: "",
+      numbers: [{ number: "", typePhone: "line", fax: false }]
+    },
     errors: {},
     loading: false
   };
@@ -19,8 +62,21 @@ class EditPhonebookForm extends React.Component {
     }));
   };
 
+  onChangeNumber = (e, index) => {
+    e.persist();
+    console.log(index);
+    const { data } = this.state;
+    const temp = data.numbers;
+    temp[index].number = e.target.value;
+    console.log(temp);
+    this.setState(prevState => ({
+      data: { ...prevState.data, numbers: temp }
+    }));
+  };
+
   onSubmit = e => {
     e.preventDefault();
+    console.log(this.state.data);
     const { data } = this.state;
     const errors = this.validate(data);
     this.setState({ errors });
@@ -30,6 +86,16 @@ class EditPhonebookForm extends React.Component {
       //   .signup(this.state.data)
       //   .catch(err => this.setState({ errors: err.response.data.errors, loading: false }));
     }
+  };
+
+  addNumber = () => {
+    const { data } = this.state;
+    const number = { number: "", typePhone: "line", fax: false };
+    data.numbers.push(number);
+    const numbersNew = data.numbers;
+    this.setState(prevState => ({
+      data: { ...prevState.data, numbers: numbersNew }
+    }));
   };
 
   validate = data => {
@@ -57,74 +123,107 @@ class EditPhonebookForm extends React.Component {
 
   render() {
     const { data, errors, loading } = this.state;
+    const options = [
+      { key: "line", text: "Аналог", value: "line" },
+      { key: "ip", text: "Цифровой(IP)", value: "IP" },
+      { key: "mob", text: "Сотовый", value: "mob" }
+    ];
 
+    // const numberBlock = data.numbers.map((number, index) => (
+    //   <Form.Group key={number.number}>
+    //     <Form.Input
+    //       label="Номер телефона"
+    //       placeholder="Номер телефона"
+    //       width={3}
+    //       name="number"
+    //       value={number.number}
+    //       onChange={e => this.onChangeNumber(e, index)}
+    //     />
+    //     <Form.Select
+    //       width={3}
+    //       label="Тип телефона"
+    //       name="typePhone"
+    //       // value={number.typePhone}
+    //       options={options}
+    //       // onChange={this.onChangeNumber(index)}
+    //     />
+    //     <Form.Checkbox
+    //       style={{ marginTop: "33px" }}
+    //       label="Факс"
+    //       // onChange={this.onChangeNumber(index)}
+    //     />
+    //     <Form.Button
+    //       style={{ marginTop: "27px", boxShadow: "none !important" }}
+    //       basic
+    //       size="mini"
+    //       color="red"
+    //     >
+    //       Удалить номер
+    //     </Form.Button>
+    //   </Form.Group>
+    // ));
     return (
       <Form onSubmit={this.onSubmit} loading={loading}>
-        <Form.Field error={!!errors.fio}>
-          <input
-            type="text"
-            name="fio"
-            placeholder="ФИО (полностью)"
-            value={data.fio}
+        <Form.Group>
+          <Form.Input
+            label="Фамилия"
+            placeholder="Фамилия"
+            width={6}
+            name="lastName"
+            value={data.lastName}
             onChange={this.onChange}
+            error={!!errors.lastName}
           />
-          {errors.fio && <InlineError text={errors.fio} />}
-        </Form.Field>
-        <Form.Field error={!!errors.position}>
-          <input
-            type="text"
-            name="position"
+          <Form.Input
+            label="Имя"
+            placeholder="Имя"
+            width={4}
+            name="firstName"
+            value={data.firstName}
+            onChange={this.onChange}
+            error={!!errors.firstName}
+          />
+          <Form.Input
+            label="Отчество"
+            placeholder="Отчество"
+            width={6}
+            name="patronymic"
+            value={data.patronymic}
+            onChange={this.onChange}
+            error={!!errors.patronymic}
+          />
+        </Form.Group>
+        <Form.Group>
+          <Form.Input
+            label="Должность"
             placeholder="Должность"
+            width={10}
+            name="position"
             value={data.position}
             onChange={this.onChange}
+            error={!!errors.position}
           />
-          {errors.position && <InlineError text={errors.position} />}
-        </Form.Field>
-        <Form.Field error={!!errors.subdivision}>
-          <input
-            type="text"
+          <Form.Select
+            width={6}
+            label="Подразделение"
             name="subdivision"
-            placeholder="Подразделение"
             value={data.subdivision}
-            onChange={this.onChange}
+            options={options}
+            placeholder="Подразделение"
+            error={!!errors.subdivision}
           />
-          {errors.subdivision && <InlineError text={errors.subdivision} />}
-        </Form.Field>
-        <Form.Field error={!!errors.linePhone}>
-          <label>Номер телефона</label>
-          <input
-            type="text"
-            name="linePhone"
-            placeholder="Номер телефона"
-            value={data.linePhone}
-            onChange={this.onChange}
-          />
-          {errors.linePhone && <InlineError text={errors.linePhone} />}
-        </Form.Field>
-        <Form.Field error={!!errors.ipPhone}>
-          <label>Номер IP телефона</label>
-          <input
-            type="text"
-            name="ipPhone"
-            placeholder="Номер IP телефона"
-            value={data.ipPhone}
-            onChange={this.onChange}
-          />
-          {errors.ipPhone && <InlineError text={errors.ipPhone} />}
-        </Form.Field>
-        <Form.Field error={!!errors.mobilePhone}>
-          <label>Номер служебного сотового</label>
-          <input
-            type="text"
-            name="mobilePhone"
-            placeholder="Номер служебного сотового"
-            value={data.mobilePhone}
-            onChange={this.onChange}
-          />
-          {errors.mobilePhone && <InlineError text={errors.mobilePhone} />}
-        </Form.Field>
+        </Form.Group>
+        <NumbersBlock
+          numbers={data.numbers}
+          onChangeNumber={this.onChangeNumber}
+          options={options}
+        />
+        <Form.Button basic size="mini" color="blue" onClick={this.addNumber}>
+          Добавить номер
+        </Form.Button>
+
         {errors.global && <InlineError text={errors.global} />}
-        <Button primary>Добавить</Button>
+        <Form.Button primary>Добавить</Form.Button>
       </Form>
     );
   }
