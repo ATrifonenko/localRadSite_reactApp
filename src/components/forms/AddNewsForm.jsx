@@ -166,13 +166,12 @@ class AddNewsForm extends React.Component {
           {errors.title && <InlineError text={errors.title} />}
         </Form.Field>
         <Form.TextArea
-          autoHeight
           placeholder="Текст"
           name="text"
           value={data.text}
           onChange={this.onChange}
         />
-        <label>Файлы:</label>
+        <p>Файлы:</p>
         <List divided>{fileList}</List>
         <Button as="div" className="addFile">
           Прикрепить файл

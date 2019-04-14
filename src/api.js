@@ -32,6 +32,9 @@ export default {
     }
   },
   phonebook: {
-    getAll: () => axios.get("/api/phonebook/getPhoneBook").then(res => res.data)
+    getAll: () =>
+      axios.get("/api/phonebook/getPhoneBook").then(res => res.data),
+    edit: data =>
+      axios.post("/api/phonebook/editPhoneBook", data).then(res => res.data)
   }
 };

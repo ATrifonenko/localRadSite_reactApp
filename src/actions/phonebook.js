@@ -8,3 +8,6 @@ export const receivedPhonebook = phonebook => ({
 
 export const getPhonebook = () => dispatch =>
   api.phonebook.getAll().then(res => dispatch(receivedPhonebook(res)));
+
+export const editPhoneBook = data => dispatch =>
+  api.phonebook.edit(data).then(res => dispatch(receivedPhonebook(res)));
