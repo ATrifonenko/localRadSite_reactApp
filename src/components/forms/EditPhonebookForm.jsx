@@ -1,12 +1,17 @@
 import React from "react";
 import PropTypes from "prop-types";
 import _ from "lodash";
-import { Form, Message, Dropdown } from "semantic-ui-react";
+import { Form, Message, Dropdown, Icon } from "semantic-ui-react";
 import { connect } from "react-redux";
-import InlineError from "../messages/InlineError";
 import { getPhonebook, editPhoneBook } from "../../actions/phonebook";
 
-const PhonesBlock = ({ phones, options, onChangeNumber, onDelNumber }) => {
+const PhonesBlock = ({
+  phones,
+  options,
+  errors,
+  onChangeNumber,
+  onDelNumber
+}) => {
   return phones.map((number, index) => (
     <Form.Group key={index}>
       <Form.Input
@@ -16,6 +21,7 @@ const PhonesBlock = ({ phones, options, onChangeNumber, onDelNumber }) => {
         name="number"
         value={number.number}
         onChange={e => onChangeNumber(e, index)}
+        error={errors[`number${index}`]}
       />
       <Form.Select
         width={3}
@@ -58,6 +64,7 @@ class EditPhonebookForm extends React.Component {
       phones: [{ number: "", typePhone: "line", note: null }]
     },
     errors: {},
+    editing: false,
     dropdown: {
       isLoading: true,
       personSelected: "",
@@ -82,7 +89,8 @@ class EditPhonebookForm extends React.Component {
         subdivision: "",
         phones: [{ number: "", typePhone: "line", note: null }]
       },
-      dropdown: { ...prevState.dropdown, personSelected: "" }
+      dropdown: { ...prevState.dropdown, personSelected: "" },
+      editing: false
     }));
   };
 
@@ -126,7 +134,8 @@ class EditPhonebookForm extends React.Component {
           subdivision: selectPerson.unit.id,
           phones: phonesPerson
         },
-        dropdown: { ...prevState.dropdown, personSelected: value }
+        dropdown: { ...prevState.dropdown, personSelected: value },
+        editing: true
       }));
     }
   };
@@ -167,19 +176,19 @@ class EditPhonebookForm extends React.Component {
     }));
   };
 
-  onSubmit = e => {
+  onSubmit = () => {
     const { data } = this.state;
     const { editPhoneBookConnect } = this.props;
-    // const errors = this.validate(data);
-    // this.setState({ errors });
-    // if (!_.isEmpty(errors)) {
-    // this.setState({ loading: true });
-    editPhoneBookConnect(data)
-      .then(() => {
-        this.onSetOptionsDropdown();
-        this.clearState();
-      })
-      .catch(err => this.setState({ errors: err.response.data.errors }));
+    const errors = this.validate(data);
+    this.setState({ errors });
+    if (_.isEmpty(errors)) {
+      editPhoneBookConnect(data)
+        .then(() => {
+          this.onSetOptionsDropdown();
+          this.clearState();
+        })
+        .catch(err => this.setState({ errors: err.response.data.errors }));
+    }
   };
 
   addNumber = () => {
@@ -192,31 +201,39 @@ class EditPhonebookForm extends React.Component {
     }));
   };
 
-  // validate = data => {
-  //   const errors = {};
-  //   if (
-  //     !data.login ||
-  //     !/^(?=.{3,20}$)(?![_.-])(?!.*[_.-]{2})[a-zA-Z0-9_-]+([^._-])$/.test(
-  //       data.login
-  //     )
-  //   )
-  //     errors.login = "Логин не введен";
-  //   if (
-  //     !data.password ||
-  //     !/^((?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9]).{5,})\S$/.test(data.password)
-  //   )
-  //     errors.password = "Пароль не введен или введен не верно";
-  //   if (!data.password2) errors.password2 = "Не введен пароль для проверки";
-  //   if (data.password !== data.password2) {
-  //     errors.password = "Пароли не совпадают";
-  //     errors.password2 = "Пароли не совпадают";
-  //   }
-  //   if (!data.name) errors.name = "Как к Вам обращаться?";
-  //   return errors;
-  // };
+  validate = data => {
+    const errors = {};
+    data.phones.forEach((el, index) => {
+      if (
+        !el.number ||
+        !/^(?:\+?(\d{1,3}))?([- (]*(\d{3})[- )]*)?((\d{1,3})[- ]*(\d{2,4})(?:[-x ]*(\d+))?)\s*$/.test(
+          el.number
+        )
+      )
+        errors[`number${index}`] = true;
+    });
+    if (
+      !data.firstName ||
+      !/^[A-ЯЁ][а-яё]+[-, ]?([A-ЯЁ]?[а-яё]+)?$/.test(data.firstName)
+    )
+      errors.firstName = true;
+    if (
+      !data.lastName ||
+      !/^[A-ЯЁ][а-яё]+[-, ]?([A-ЯЁ]?[а-яё]+)?$/.test(data.lastName)
+    )
+      errors.lastName = true;
+    if (
+      !data.patronymic ||
+      !/^[A-ЯЁ][а-яё]+[-, ]?([A-ЯЁ]?[а-яё]+)?$/.test(data.patronymic)
+    )
+      errors.patronymic = true;
+    if (!data.position) errors.position = true;
+    if (!data.subdivision) errors.subdivision = true;
+    return errors;
+  };
 
   render() {
-    const { data, errors, dropdown } = this.state;
+    const { data, errors, editing, dropdown } = this.state;
     const options = [
       { key: "line", text: "Аналог", value: "line" },
       { key: "ip", text: "Цифровой(IP)", value: "IP" },
@@ -239,7 +256,7 @@ class EditPhonebookForm extends React.Component {
         />
         <Message
           info
-          content="Для редактирования уже существующей записи выберите сотрудника из списка выше. Для добавления новой - просто заполните форму."
+          content="Для редактирования уже существующей записи выберите сотрудника из списка выше. Для добавления новой - заполните форму."
         />
         <Form onSubmit={this.onSubmit}>
           <Form.Group>
@@ -250,7 +267,7 @@ class EditPhonebookForm extends React.Component {
               name="lastName"
               value={data.lastName}
               onChange={this.onChange}
-              // error={!!errors.lastName}
+              error={errors.lastName}
             />
             <Form.Input
               label="Имя"
@@ -259,7 +276,7 @@ class EditPhonebookForm extends React.Component {
               name="firstName"
               value={data.firstName}
               onChange={this.onChange}
-              // error={!!errors.firstName}
+              error={errors.firstName}
             />
             <Form.Input
               label="Отчество"
@@ -268,7 +285,7 @@ class EditPhonebookForm extends React.Component {
               name="patronymic"
               value={data.patronymic}
               onChange={this.onChange}
-              // error={!!errors.patronymic}
+              error={errors.patronymic}
             />
           </Form.Group>
           <Form.Group>
@@ -279,7 +296,7 @@ class EditPhonebookForm extends React.Component {
               name="position"
               value={data.position}
               onChange={this.onChange}
-              // error={!!errors.position}
+              error={errors.position}
             />
             <Form.Dropdown
               width={6}
@@ -291,10 +308,11 @@ class EditPhonebookForm extends React.Component {
               options={dropdown.subdivision}
               placeholder="Подразделение"
               onChange={this.onChangeSubdivision}
-              // error={!!errors.subdivision}
+              error={errors.subdivision}
             />
           </Form.Group>
           <PhonesBlock
+            errors={errors}
             phones={data.phones}
             onChangeNumber={this.onChangeNumber}
             options={options}
@@ -316,9 +334,27 @@ class EditPhonebookForm extends React.Component {
             header="Form Completed"
             content="You're all signed up for the newsletter"
           />
-          <Form.Button primary onSubmit={this.onSubmit}>
-            Сохранить
-          </Form.Button>
+          <Form.Group widths="equal">
+            <Form.Button primary compact floated="left">
+              Сохранить
+            </Form.Button>
+            {editing ? (
+              <Form.Button
+                color="red"
+                icon
+                basic
+                compact
+                labelPosition="right"
+                floated="right"
+                onClick={this.onDelPerson}
+              >
+                Удалить из справочника
+                <Icon name="warning" />
+              </Form.Button>
+            ) : (
+              ""
+            )}
+          </Form.Group>
         </Form>
       </div>
     );
