@@ -11,3 +11,6 @@ export const getPhonebook = () => dispatch =>
 
 export const editPhoneBook = data => dispatch =>
   api.phonebook.edit(data).then(res => dispatch(receivedPhonebook(res)));
+
+export const delPerson = id => dispatch =>
+  api.phonebook.delPerson(id).then(res => dispatch(receivedPhonebook(res)));

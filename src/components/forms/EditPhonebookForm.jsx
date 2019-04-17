@@ -3,7 +3,11 @@ import PropTypes from "prop-types";
 import _ from "lodash";
 import { Form, Message, Dropdown, Icon } from "semantic-ui-react";
 import { connect } from "react-redux";
-import { getPhonebook, editPhoneBook } from "../../actions/phonebook";
+import {
+  getPhonebook,
+  editPhoneBook,
+  delPerson
+} from "../../actions/phonebook";
 
 const PhonesBlock = ({
   phones,
@@ -63,7 +67,8 @@ class EditPhonebookForm extends React.Component {
       subdivision: "",
       phones: [{ number: "", typePhone: "line", note: null }]
     },
-    errors: {},
+    errors: "",
+    success: "",
     editing: false,
     dropdown: {
       isLoading: true,
@@ -78,7 +83,7 @@ class EditPhonebookForm extends React.Component {
     getPhonebookConnect().then(this.onSetOptionsDropdown);
   }
 
-  clearState = () => {
+  clearState = success => {
     this.setState(prevState => ({
       data: {
         id: "",
@@ -90,6 +95,8 @@ class EditPhonebookForm extends React.Component {
         phones: [{ number: "", typePhone: "line", note: null }]
       },
       dropdown: { ...prevState.dropdown, personSelected: "" },
+      errors: "",
+      success,
       editing: false
     }));
   };
@@ -176,6 +183,17 @@ class EditPhonebookForm extends React.Component {
     }));
   };
 
+  onDelPerson = () => {
+    const { data } = this.state;
+    const { delPersonConnect } = this.props;
+    delPersonConnect({ id: data.id })
+      .then(() => {
+        this.onSetOptionsDropdown();
+        this.clearState("Сотрудник удален из справочника");
+      })
+      .catch(err => this.setState({ errors: err.response.data.errors }));
+  };
+
   onSubmit = () => {
     const { data } = this.state;
     const { editPhoneBookConnect } = this.props;
@@ -185,7 +203,7 @@ class EditPhonebookForm extends React.Component {
       editPhoneBookConnect(data)
         .then(() => {
           this.onSetOptionsDropdown();
-          this.clearState();
+          this.clearState("Данные были успешно сохранены");
         })
         .catch(err => this.setState({ errors: err.response.data.errors }));
     }
@@ -229,11 +247,16 @@ class EditPhonebookForm extends React.Component {
       errors.patronymic = true;
     if (!data.position) errors.position = true;
     if (!data.subdivision) errors.subdivision = true;
+    if (!_.isEmpty(errors)) {
+      errors.msgHeader = "Необходимо заполнить все поля правильно!";
+      errors.msg =
+        "Ф.И.О. с большой буквы. Номер телефона только цифры (разрешены пробелы, тире, скобки).";
+    }
     return errors;
   };
 
   render() {
-    const { data, errors, editing, dropdown } = this.state;
+    const { data, errors, success, editing, dropdown } = this.state;
     const options = [
       { key: "line", text: "Аналог", value: "line" },
       { key: "ip", text: "Цифровой(IP)", value: "IP" },
@@ -258,7 +281,7 @@ class EditPhonebookForm extends React.Component {
           info
           content="Для редактирования уже существующей записи выберите сотрудника из списка выше. Для добавления новой - заполните форму."
         />
-        <Form onSubmit={this.onSubmit}>
+        <Form onSubmit={this.onSubmit} error={!!errors} success={!!success}>
           <Form.Group>
             <Form.Input
               label="Фамилия"
@@ -327,13 +350,8 @@ class EditPhonebookForm extends React.Component {
           >
             Добавить номер
           </Form.Button>
-
-          {/* {errors.global && <InlineError text={errors.global} />} */}
-          <Message
-            success
-            header="Form Completed"
-            content="You're all signed up for the newsletter"
-          />
+          <Message success header={success} />
+          <Message error header={errors.msgHeader} content={errors.msg} />
           <Form.Group widths="equal">
             <Form.Button primary compact floated="left">
               Сохранить
@@ -346,6 +364,7 @@ class EditPhonebookForm extends React.Component {
                 compact
                 labelPosition="right"
                 floated="right"
+                type="button"
                 onClick={this.onDelPerson}
               >
                 Удалить из справочника
@@ -372,10 +391,15 @@ EditPhonebookForm.propTypes = {
   phonebook: PropTypes.arrayOf(PropTypes.object).isRequired,
   subdivision: PropTypes.arrayOf(PropTypes.object).isRequired,
   getPhonebookConnect: PropTypes.func.isRequired,
-  editPhoneBookConnect: PropTypes.func.isRequired
+  editPhoneBookConnect: PropTypes.func.isRequired,
+  delPersonConnect: PropTypes.func.isRequired
 };
 
 export default connect(
   mapStateToProps,
-  { getPhonebookConnect: getPhonebook, editPhoneBookConnect: editPhoneBook }
+  {
+    getPhonebookConnect: getPhonebook,
+    editPhoneBookConnect: editPhoneBook,
+    delPersonConnect: delPerson
+  }
 )(EditPhonebookForm);

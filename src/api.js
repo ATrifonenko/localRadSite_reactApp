@@ -35,6 +35,8 @@ export default {
     getAll: () =>
       axios.get("/api/phonebook/getPhoneBook").then(res => res.data),
     edit: data =>
-      axios.post("/api/phonebook/editPhoneBook", data).then(res => res.data)
+      axios.post("/api/phonebook/editPhoneBook", data).then(res => res.data),
+    delPerson: data =>
+      axios.post("/api/phonebook/delPerson", data).then(res => res.data)
   }
 };
