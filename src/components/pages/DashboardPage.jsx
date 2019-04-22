@@ -97,8 +97,6 @@ class DashboardPage extends React.Component {
     ));
     return (
       <div className="dashboard">
-        <h2>Панель управления</h2>
-        <h3>Новости</h3>
         <div className="dashboard-news">
           <div className="list-news">
             <p>Мои новости:</p>
