@@ -5,13 +5,13 @@ import { connect } from "react-redux";
 import { Card, Icon, List } from "semantic-ui-react";
 import "../css/newsList.css";
 
-const NewsList = ({ news }) => {
+const NewsList = ({ news, getFile }) => {
   const files = index =>
     news[index].files.map(file => (
       <List.Item key={file.id}>
         <List.Icon name="download" verticalAlign="middle" />
         <List.Content>
-          <List.Header as="a" href={file.path} download>
+          <List.Header as="a" onClick={() => getFile(file.path, file.name)}>
             {file.name}
           </List.Header>
         </List.Content>
@@ -45,7 +45,8 @@ const NewsList = ({ news }) => {
 };
 
 NewsList.propTypes = {
-  news: PropTypes.arrayOf(PropTypes.object).isRequired
+  news: PropTypes.arrayOf(PropTypes.object).isRequired,
+  getFile: PropTypes.func.isRequired
 };
 
 function mapStateToProps(state) {

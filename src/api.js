@@ -10,7 +10,9 @@ export default {
       axios.post("/api/users/signup", credentials).then(res => res.data)
   },
   main: {
-    getMain: () => axios.get("/api/getMain").then(res => res.data)
+    getMain: () => axios.get("/api/getMain").then(res => res.data),
+    getFile: filePath =>
+      axios.get(filePath, { responseType: "blob" }).then(res => res)
   },
   dashboard: {
     news: {

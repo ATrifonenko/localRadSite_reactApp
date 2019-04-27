@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import fileDownload from "../../utils/fileDownload";
 import NewsList from "../newsList";
 import SideBar from "../SideBar";
 import api from "../../api";
@@ -17,10 +18,13 @@ class HomePage extends React.Component {
       allNewsConnect(res.news);
     });
 
+  getFile = (filePath, fileName) =>
+    api.main.getFile(filePath).then(res => fileDownload(res, fileName));
+
   render() {
     return (
       <div className="main-wrapper">
-        <NewsList />
+        <NewsList getFile={this.getFile} />
         <SideBar />
       </div>
     );
