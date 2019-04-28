@@ -4,6 +4,8 @@ import _ from "lodash";
 import { connect } from "react-redux";
 import { Card, Icon, List } from "semantic-ui-react";
 import "../css/newsList.css";
+import moment from "moment";
+import localization from "moment/locale/ru";
 
 const NewsList = ({ news, getFile }) => {
   const files = index =>
@@ -33,7 +35,9 @@ const NewsList = ({ news, getFile }) => {
       </Card.Content>
       <Card.Content extra>
         <Icon name="clock" />
-        {newsItem.datetime}
+        {moment(newsItem.datetime, moment.ISO_8601)
+          .locale("ru", localization)
+          .format("LLL")}
         <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
         <Icon name="user" />
         {newsItem.author}
