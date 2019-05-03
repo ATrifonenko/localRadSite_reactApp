@@ -1,7 +1,5 @@
 .main-nav {
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: space-around;
+  margin: 0 10px !important;
 }
 
 .menu-item {
@@ -36,8 +34,7 @@
 
 .title-block::after {
   content: "";
-  background: url("../media/header.jpg")
-    no-repeat;
+  background: url("../media/header.jpg") no-repeat;
   opacity: 0.8;
   top: 0;
   left: 0;
@@ -62,4 +59,45 @@ h1.title {
   color: #d2ab67;
   font-size: 38px;
   text-shadow: 1px 1px 2px #231f20;
+}
+
+.ui.inverted.blue.menu,
+.ui.inverted.menu .blue.active.item {
+  background: #cae4f7;
+  background-image: linear-gradient(to bottom, #e5f3fe, #cae1f1);
+}
+
+.ui.menu .item {
+  color: #0055a6;
+  font-weight: bold;
+}
+
+.ui.inverted.menu .item,
+.ui.inverted.menu .item > a:not(.ui) {
+  background: 0 0;
+  color: #0055a6;
+}
+
+.ui.inverted.menu .dropdown.item:hover,
+.ui.inverted.menu .link.item:hover,
+.ui.inverted.menu a.item:hover,
+.ui.link.inverted.menu .item:hover {
+  background: rgba(0, 0, 0, 0.03);
+  color: rgba(0, 85, 166, 0.95);
+}
+
+.ui.inverted.menu .active.item {
+  background: rgba(0, 0, 0, 0.03);
+  color: #0055a6 !important;
+  font-weight: bold;
+}
+
+.ui.inverted.menu .active.item:hover {
+  background: rgba(0, 0, 0, 0.03);
+  color: #0055a6 !important;
+  font-weight: bold;
+}
+
+.ui.menu .ui.dropdown .menu > .item {
+  text-align: center;
 }
