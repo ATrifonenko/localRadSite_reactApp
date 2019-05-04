@@ -70,6 +70,7 @@ class EditPhonebookForm extends React.Component {
     errors: "",
     success: "",
     editing: false,
+    dataLoading: false,
     dropdown: {
       isLoading: true,
       personSelected: "",
@@ -97,8 +98,12 @@ class EditPhonebookForm extends React.Component {
       dropdown: { ...prevState.dropdown, personSelected: "" },
       errors: "",
       success,
-      editing: false
+      editing: false,
+      dataLoading: false
     }));
+    setTimeout(() => {
+      this.setState({ success: "" });
+    }, 2000);
   };
 
   onSetOptionsDropdown = () => {
@@ -186,12 +191,15 @@ class EditPhonebookForm extends React.Component {
   onDelPerson = () => {
     const { data } = this.state;
     const { delPersonConnect } = this.props;
+    this.setState({ dataLoading: true });
     delPersonConnect({ id: data.id })
       .then(() => {
         this.onSetOptionsDropdown();
         this.clearState("Сотрудник удален из справочника");
       })
-      .catch(err => this.setState({ errors: err.response.data.errors }));
+      .catch(err =>
+        this.setState({ errors: err.response.data.errors, dataLoading: false })
+      );
   };
 
   onSubmit = () => {
@@ -200,12 +208,19 @@ class EditPhonebookForm extends React.Component {
     const errors = this.validate(data);
     this.setState({ errors });
     if (_.isEmpty(errors)) {
+      this.setState({ dataLoading: true });
+
       editPhoneBookConnect(data)
         .then(() => {
           this.onSetOptionsDropdown();
           this.clearState("Данные были успешно сохранены");
         })
-        .catch(err => this.setState({ errors: err.response.data.errors }));
+        .catch(err =>
+          this.setState({
+            errors: err.response.data.errors,
+            dataLoading: false
+          })
+        );
     }
   };
 
@@ -256,7 +271,14 @@ class EditPhonebookForm extends React.Component {
   };
 
   render() {
-    const { data, errors, success, editing, dropdown } = this.state;
+    const {
+      data,
+      errors,
+      success,
+      editing,
+      dropdown,
+      dataLoading
+    } = this.state;
     const options = [
       { key: "line", text: "Аналог", value: "line" },
       { key: "ip", text: "Цифровой(IP)", value: "IP" },
@@ -350,10 +372,9 @@ class EditPhonebookForm extends React.Component {
           >
             Добавить номер
           </Form.Button>
-          <Message success header={success} />
           <Message error header={errors.msgHeader} content={errors.msg} />
           <Form.Group widths="equal">
-            <Form.Button primary compact floated="left">
+            <Form.Button primary compact floated="left" disabled={dataLoading}>
               Сохранить
             </Form.Button>
             {editing ? (
@@ -366,6 +387,7 @@ class EditPhonebookForm extends React.Component {
                 floated="right"
                 type="button"
                 onClick={this.onDelPerson}
+                disabled={dataLoading}
               >
                 Удалить из справочника
                 <Icon name="warning" />
@@ -374,6 +396,7 @@ class EditPhonebookForm extends React.Component {
               ""
             )}
           </Form.Group>
+          <Message success header={success} />
         </Form>
       </div>
     );

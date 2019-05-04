@@ -9,4 +9,5 @@ export const IS_EDIT_NEWS = "IS_EDIT_NEWS";
 
 export const RECEIVED_PHONEBOOK = "RECEIVED_PHONEBOOK";
 
-export const GET_NEWS = "GET_NEWS";
+export const GET_FIRST_PAGE_NEWS = "GET_FIRST_PAGE_NEWS";
+export const GET_OTHER_PAGE_NEWS = "GET_OTHER_PAGE_NEWS";

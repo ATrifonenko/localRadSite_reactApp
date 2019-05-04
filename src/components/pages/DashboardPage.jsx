@@ -62,6 +62,7 @@ class DashboardPage extends React.Component {
           <Button
             disabled={!!isEditNews}
             compact
+            basic
             circular
             icon="edit"
             color="blue"
@@ -73,8 +74,9 @@ class DashboardPage extends React.Component {
               <Button
                 disabled={!!isEditNews}
                 compact
-                negative
+                basic
                 circular
+                color="red"
                 icon="delete"
                 title="Удалить"
                 onClick={this.getNewsId}
@@ -92,7 +94,7 @@ class DashboardPage extends React.Component {
             position="top center"
           />
         </List.Content>
-        <List.Content>{news.title}</List.Content>
+        <List.Content className="list-content">{news.title}</List.Content>
       </List.Item>
     ));
     return (

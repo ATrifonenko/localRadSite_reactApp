@@ -143,14 +143,15 @@ class AddNewsForm extends React.Component {
         <List.Content floated="right" verticalAlign="middle">
           <Button
             compact
-            negative
+            basic
             circular
+            color="red"
             icon="delete"
             title="Удалить"
             onClick={this.onDeleteFile}
           />
         </List.Content>
-        <List.Content>{file.name}</List.Content>
+        <List.Content className="list-content">{file.name}</List.Content>
       </List.Item>
     ));
 

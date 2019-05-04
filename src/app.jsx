@@ -16,6 +16,8 @@ const App = ({ location }) => (
     <Header />
     <Switch>
       <Route location={location} path="/" exact component={HomePage} />
+      <Route location={location} path="/news" exact component={HomePage} />
+      <Route location={location} path="/news/:id" exact component={HomePage} />
       <AdminRoute
         location={location}
         path="/dashboard"

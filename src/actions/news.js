@@ -1,8 +1,11 @@
-import { GET_NEWS } from "../types";
+import { GET_FIRST_PAGE_NEWS, GET_OTHER_PAGE_NEWS } from "../types";
 
-const allNews = news => ({
-  type: GET_NEWS,
+export const otherPageNews = news => ({
+  type: GET_OTHER_PAGE_NEWS,
   news
 });
 
-export default allNews;
+export const firstPageNews = news => ({
+  type: GET_FIRST_PAGE_NEWS,
+  news
+});

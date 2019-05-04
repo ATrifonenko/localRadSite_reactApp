@@ -11,6 +11,10 @@
   margin-right: 25px;
 }
 
+.list-content {
+  line-height: 2.142857em !important;
+}
+
 .add-news {
-  width: 400px;
+  min-width: 400px;
 }

@@ -11,6 +11,7 @@ export default {
   },
   main: {
     getMain: () => axios.get("/api/getMain").then(res => res.data),
+    getNewsPage: page => axios.get(`/api/news/${page}`).then(res => res.data),
     getFile: filePath =>
       axios.get(filePath, { responseType: "blob" }).then(res => res)
   },

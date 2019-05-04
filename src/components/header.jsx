@@ -9,7 +9,7 @@ const links = [{ title: "Почта", link: "#" }, { title: "СЭД", link: "#" 
 
 function Header() {
   const dropMenu = links.map(link => (
-    <Dropdown.Item as="a" href={link.link} target="_blank">
+    <Dropdown.Item key={link.title} as="a" href={link.link} target="_blank">
       {link.title}
     </Dropdown.Item>
   ));
@@ -39,9 +39,7 @@ function Header() {
             href="#" // main link
             target="_blank"
           >
-            <Dropdown.Menu color="blue" inverted>
-              {dropMenu}
-            </Dropdown.Menu>
+            <Dropdown.Menu color="blue">{dropMenu}</Dropdown.Menu>
           </Dropdown>
         </Menu>
       </nav>

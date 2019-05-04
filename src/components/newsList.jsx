@@ -2,12 +2,23 @@ import React from "react";
 import PropTypes from "prop-types";
 import _ from "lodash";
 import { connect } from "react-redux";
-import { Card, Icon, List } from "semantic-ui-react";
+import { Card, Icon, List, Pagination, Grid } from "semantic-ui-react";
 import "../css/newsList.css";
 import moment from "moment";
 import localization from "moment/locale/ru";
 
-const NewsList = ({ news, getFile }) => {
+const NewsList = ({
+  firstPage,
+  otherPage,
+  countNews,
+  currentPage,
+  getFile,
+  onPageChange
+}) => {
+  const page = currentPage === undefined ? 1 : +currentPage;
+  const news = page === 1 ? firstPage : otherPage;
+  const totalPages = Math.ceil(countNews / 15);
+
   const files = index =>
     news[index].files.map(file => (
       <List.Item key={file.id}>
@@ -45,17 +56,48 @@ const NewsList = ({ news, getFile }) => {
     </Card>
   ));
 
-  return <div className="news-list">{_.isEmpty(news) ? null : item}</div>;
+  return (
+    <div className="news-list">
+      {_.isEmpty(news) ? null : item}
+      <Grid>
+        <Grid.Column textAlign="center">
+          <Pagination
+            activePage={page}
+            boundaryRange={0}
+            size="mini"
+            ellipsisItem={null}
+            nextItem={null}
+            prevItem={null}
+            firstItem={totalPages > 5 ? undefined : null}
+            lastItem={totalPages > 5 ? undefined : null}
+            siblingRange={2}
+            totalPages={totalPages}
+            onPageChange={onPageChange}
+          />
+        </Grid.Column>
+      </Grid>
+    </div>
+  );
 };
 
 NewsList.propTypes = {
-  news: PropTypes.arrayOf(PropTypes.object).isRequired,
-  getFile: PropTypes.func.isRequired
+  firstPage: PropTypes.arrayOf(PropTypes.object).isRequired,
+  otherPage: PropTypes.arrayOf(PropTypes.object).isRequired,
+  getFile: PropTypes.func.isRequired,
+  onPageChange: PropTypes.func.isRequired,
+  countNews: PropTypes.number.isRequired,
+  currentPage: PropTypes.string
+};
+
+NewsList.defaultProps = {
+  currentPage: "1"
 };
 
 function mapStateToProps(state) {
   return {
-    news: state.news.news
+    firstPage: state.news.firstPage,
+    otherPage: state.news.otherPage,
+    countNews: state.news.count
   };
 }
 
