@@ -59,23 +59,27 @@ const NewsList = ({
   return (
     <div className="news-list">
       {_.isEmpty(news) ? null : item}
-      <Grid>
-        <Grid.Column textAlign="center">
-          <Pagination
-            activePage={page}
-            boundaryRange={0}
-            size="mini"
-            ellipsisItem={null}
-            nextItem={null}
-            prevItem={null}
-            firstItem={totalPages > 5 ? undefined : null}
-            lastItem={totalPages > 5 ? undefined : null}
-            siblingRange={2}
-            totalPages={totalPages}
-            onPageChange={onPageChange}
-          />
-        </Grid.Column>
-      </Grid>
+      {totalPages > 1 ? (
+        <Grid>
+          <Grid.Column textAlign="center">
+            <Pagination
+              activePage={page}
+              boundaryRange={0}
+              size="mini"
+              ellipsisItem={null}
+              nextItem={null}
+              prevItem={null}
+              firstItem={totalPages > 5 ? undefined : null}
+              lastItem={totalPages > 5 ? undefined : null}
+              siblingRange={2}
+              totalPages={totalPages}
+              onPageChange={onPageChange}
+            />
+          </Grid.Column>
+        </Grid>
+      ) : (
+        ""
+      )}
     </div>
   );
 };

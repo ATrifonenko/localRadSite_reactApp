@@ -11,6 +11,10 @@
   margin-right: 25px;
 }
 
+.title-list {
+  min-height: 310px;
+}
+
 .list-content {
   line-height: 2.142857em !important;
 }

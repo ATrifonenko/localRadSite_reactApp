@@ -11,10 +11,8 @@ export const editingNews = newsId => ({
   newsId
 });
 
-export const getNewsTitle = requestedUser => dispatch =>
-  api.dashboard.news
-    .getTitle(requestedUser)
-    .then(res => dispatch(newsTitle(res.dashboardNews)));
+export const getNewsTitle = page => dispatch =>
+  api.dashboard.news.getTitle(page).then(res => dispatch(newsTitle(res)));
 
 export const editingNewsState = newsId => dispatch => {
   dispatch(editingNews(newsId));

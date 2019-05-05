@@ -24,6 +24,24 @@ const App = ({ location }) => (
         exact
         component={TestingPage}
       />
+      <AdminRoute
+        location={location}
+        path="/dashboard/news"
+        exact
+        component={TestingPage}
+      />
+      <AdminRoute
+        location={location}
+        path="/dashboard/news/:page"
+        exact
+        component={TestingPage}
+      />
+      <AdminRoute
+        location={location}
+        path="/dashboard/phonebook"
+        exact
+        component={TestingPage}
+      />
       <Route
         location={location}
         path="/phonebook"

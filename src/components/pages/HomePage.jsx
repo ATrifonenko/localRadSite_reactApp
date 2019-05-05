@@ -26,7 +26,6 @@ class HomePage extends React.Component {
   }
 
   getNewsPage = page => {
-    console.log(page);
     api.main.getNewsPage(page).then(res => {
       const { firstPageNewsConnect, otherPageNewsConnect } = this.props;
       if (page === "1") {

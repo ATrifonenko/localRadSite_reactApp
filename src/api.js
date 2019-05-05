@@ -31,7 +31,8 @@ export default {
           .then(res => res.data),
       deleteNews: data =>
         axios.post("/api/news/delNews", data).then(res => res.data),
-      getTitle: () => axios.post("/api/news/getTitle").then(res => res.data)
+      getTitle: page =>
+        axios.get(`/api/news/getTitle/${page}`).then(res => res.data)
     }
   },
   phonebook: {

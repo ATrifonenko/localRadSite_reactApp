@@ -84,6 +84,7 @@ class AddNewsForm extends React.Component {
     const errors = this.validate(data);
     this.setState({ errors });
     if (_.isEmpty(errors)) {
+      editingNewsStateConnect("");
       const formData = new FormData();
       Object.keys(data).forEach(key => {
         if ({}.hasOwnProperty.call(data, key)) {
@@ -115,7 +116,6 @@ class AddNewsForm extends React.Component {
             },
             loading: false
           }));
-          editingNewsStateConnect("");
         })
         .catch(err =>
           this.setState({ errors: err.response.data.errors, loading: false })

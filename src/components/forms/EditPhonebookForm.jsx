@@ -79,7 +79,7 @@ class EditPhonebookForm extends React.Component {
     }
   };
 
-  componentWillMount() {
+  componentDidMount() {
     const { getPhonebookConnect } = this.props;
     getPhonebookConnect().then(this.onSetOptionsDropdown);
   }
