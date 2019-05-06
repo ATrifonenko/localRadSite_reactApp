@@ -9,6 +9,8 @@ import HomePage from "./components/pages/HomePage";
 import TestingPage from "./components/pages/TestingPage";
 import PhoneBookPage from "./components/pages/PhoneBookPage";
 import AdminRoute from "./components/routes/AdminRoute";
+import EditorRoute from "./components/routes/EditorRoute";
+import RootRoute from "./components/routes/RootRoute";
 import NotFound from "./components/pages/NotFound";
 
 const App = ({ location }) => (
@@ -18,19 +20,19 @@ const App = ({ location }) => (
       <Route location={location} path="/" exact component={HomePage} />
       <Route location={location} path="/news" exact component={HomePage} />
       <Route location={location} path="/news/:id" exact component={HomePage} />
-      <AdminRoute
+      <EditorRoute
         location={location}
         path="/dashboard"
         exact
         component={TestingPage}
       />
-      <AdminRoute
+      <EditorRoute
         location={location}
         path="/dashboard/news"
         exact
         component={TestingPage}
       />
-      <AdminRoute
+      <EditorRoute
         location={location}
         path="/dashboard/news/:page"
         exact
@@ -39,6 +41,12 @@ const App = ({ location }) => (
       <AdminRoute
         location={location}
         path="/dashboard/phonebook"
+        exact
+        component={TestingPage}
+      />
+      <RootRoute
+        location={location}
+        path="/dashboard/users"
         exact
         component={TestingPage}
       />

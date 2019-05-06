@@ -3,15 +3,11 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Route, Redirect } from "react-router-dom";
 
-const AdminRoute = ({ privilege, component: Component, ...rest }) => (
+const RootRoute = ({ privilege, component: Component, ...rest }) => (
   <Route
     {...rest}
     render={props =>
-      privilege === "admin" || privilege === "root" ? (
-        <Component {...props} />
-      ) : (
-        <Redirect to="/" />
-      )
+      privilege === "root" ? <Component {...props} /> : <Redirect to="/" />
     }
   />
 );
@@ -22,9 +18,9 @@ function mapStateToProps(state) {
   };
 }
 
-AdminRoute.propTypes = {
+RootRoute.propTypes = {
   component: PropTypes.func.isRequired,
   privilege: PropTypes.string.isRequired
 };
 
-export default connect(mapStateToProps)(AdminRoute);
+export default connect(mapStateToProps)(RootRoute);

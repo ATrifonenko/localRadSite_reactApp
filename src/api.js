@@ -33,6 +33,10 @@ export default {
         axios.post("/api/news/delNews", data).then(res => res.data),
       getTitle: page =>
         axios.get(`/api/news/getTitle/${page}`).then(res => res.data)
+    },
+    users: {
+      editUsers: data =>
+        axios.post("/api/users/editUsers", data).then(res => res.data)
     }
   },
   phonebook: {

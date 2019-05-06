@@ -9,7 +9,7 @@ import "../css/addNewsForm.css";
 const UserPanel = ({ name, privilege, logoutConnect }) => (
   <div>
     <h3 className="username">Привет, {name}</h3>
-    {privilege === "admin" ? (
+    {privilege !== "user" ? (
       <Button as={Link} to="/dashboard" content="Панель управления" />
     ) : (
       ""
