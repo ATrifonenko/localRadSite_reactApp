@@ -3,7 +3,7 @@ import { Tab } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { Route } from "react-router-dom";
 import PropTypes from "prop-types";
-import DashboardPage from "./DashboardPage";
+import DashboardNews from "./DashboardNews";
 import EditPhonebookForm from "../forms/EditPhonebookForm";
 import DashboardUsers from "./DashboardUsers";
 
@@ -12,9 +12,9 @@ const news = {
   path: "news",
   render: () => (
     <Tab.Pane>
-      <Route path="/dashboard" exact component={DashboardPage} />
-      <Route path="/dashboard/news" exact component={DashboardPage} />
-      <Route path="/dashboard/news/:page" exact component={DashboardPage} />
+      <Route path="/dashboard" exact component={DashboardNews} />
+      <Route path="/dashboard/news" exact component={DashboardNews} />
+      <Route path="/dashboard/news/:page" exact component={DashboardNews} />
     </Tab.Pane>
   )
 };
@@ -37,7 +37,7 @@ const users = {
   )
 };
 
-class TestingPage extends React.Component {
+class Dashboard extends React.Component {
   state = {
     indexTab: 0
   };
@@ -81,11 +81,19 @@ class TestingPage extends React.Component {
     const { privilege } = this.props;
     let panes = [];
 
-    if (privilege === "root") panes = [news, phonebook, users];
-
-    if (privilege === "admin") panes = [news, phonebook];
-
-    if (privilege === "editor") panes = [news];
+    switch (privilege) {
+      case "root":
+        panes = [news, phonebook, users];
+        break;
+      case "admin":
+        panes = [news, phonebook];
+        break;
+      case "editor":
+        panes = [news];
+        break;
+      default:
+        break;
+    }
 
     return (
       <div className="dashboard">
@@ -106,7 +114,7 @@ function mapStateToPrors(state) {
   };
 }
 
-TestingPage.propTypes = {
+Dashboard.propTypes = {
   history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
   location: PropTypes.shape({ pathname: PropTypes.string.isRequired })
     .isRequired,
@@ -114,4 +122,4 @@ TestingPage.propTypes = {
   privilege: PropTypes.string.isRequired
 };
 
-export default connect(mapStateToPrors)(TestingPage);
+export default connect(mapStateToPrors)(Dashboard);

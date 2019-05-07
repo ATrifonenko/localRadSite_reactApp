@@ -11,7 +11,7 @@ import {
   editingNewsState
 } from "../../actions/dashboard";
 
-class DashboardPage extends React.Component {
+class DashboardNews extends React.Component {
   state = {
     newsId: ""
   };
@@ -179,7 +179,7 @@ function mapStateToProps(state) {
   };
 }
 
-DashboardPage.propTypes = {
+DashboardNews.propTypes = {
   newsTitleConnect: PropTypes.func.isRequired,
   getNewsTitleConnect: PropTypes.func.isRequired,
   countNews: PropTypes.number.isRequired,
@@ -203,4 +203,4 @@ export default connect(
     getNewsTitleConnect: getNewsTitle,
     editingNewsStateConnect: editingNewsState
   }
-)(DashboardPage);
+)(DashboardNews);

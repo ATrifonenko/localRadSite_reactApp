@@ -6,7 +6,7 @@ import "./app.css";
 import Header from "./components/header";
 import Footer from "./components/footer";
 import HomePage from "./components/pages/HomePage";
-import TestingPage from "./components/pages/TestingPage";
+import Dashboard from "./components/pages/Dashboard";
 import PhoneBookPage from "./components/pages/PhoneBookPage";
 import AdminRoute from "./components/routes/AdminRoute";
 import EditorRoute from "./components/routes/EditorRoute";
@@ -24,31 +24,31 @@ const App = ({ location }) => (
         location={location}
         path="/dashboard"
         exact
-        component={TestingPage}
+        component={Dashboard}
       />
       <EditorRoute
         location={location}
         path="/dashboard/news"
         exact
-        component={TestingPage}
+        component={Dashboard}
       />
       <EditorRoute
         location={location}
         path="/dashboard/news/:page"
         exact
-        component={TestingPage}
+        component={Dashboard}
       />
       <AdminRoute
         location={location}
         path="/dashboard/phonebook"
         exact
-        component={TestingPage}
+        component={Dashboard}
       />
       <RootRoute
         location={location}
         path="/dashboard/users"
         exact
-        component={TestingPage}
+        component={Dashboard}
       />
       <Route
         location={location}

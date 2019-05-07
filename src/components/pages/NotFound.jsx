@@ -1,9 +1,10 @@
-import React from 'react';
+import React from "react";
 
 const NotFound = () => (
-  <div>
-    <h3>404 page not found</h3>
-    <p>We are sorry but the page you are looking for does not exist.</p>
-  </div>)
+  <div style={{ textAlign: "center", margin: "50px" }}>
+    <h3>404 страница не найдена</h3>
+    <p>Такой страницы не существует, как Вы сюда попали?</p>
+  </div>
+);
 
 export default NotFound;
